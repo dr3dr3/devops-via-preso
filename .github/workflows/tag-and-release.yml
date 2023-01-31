@@ -1,10 +1,7 @@
 name: Bump version
-on:
-  push:
-    branches:
-      - main
-    workflow_dispatch
-    
+run-name: ${{ github.actor }} is tagging and releasing 📦
+on: workflow_dispatch
+
 jobs:
   build:
     runs-on: ubuntu-latest
