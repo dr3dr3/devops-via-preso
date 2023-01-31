@@ -1,0 +1,31 @@
+{
+    "name": "devops-via-preso",
+    "version": "0.1.0",
+    "description": "Demonstrating DevOps using Reveal.JS Presentations",
+    "homepage": "https://github.com/dr3dr3/devops-via-preso",
+    "license": "MIT",
+    "author": {
+        "name": "André Dreyer",
+        "email": "github@andredreyer.com",
+        "web": "https://andredreyer.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/dr3dr3/devops-via-preso.git"
+    },
+    "keywords": [
+        "devops",
+        "reveal",
+        "slides",
+        "presentation"
+    ],
+    "workspaces" : [
+        "reveal-md"
+    ],
+    "scripts": {
+        "start": "cd reveal-md && reveal-md . -w",
+        "lint": "npm run lint -workspace=reveal-md",
+        "test": "npm run test -workspace=reveal-md",
+        "build": "cd reveal-md && reveal-md --static _site"
+    }
+}
