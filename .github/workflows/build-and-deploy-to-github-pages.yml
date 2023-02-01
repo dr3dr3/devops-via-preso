@@ -37,7 +37,7 @@ jobs:
       - name: Upload Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          path: '_site/'
+          path: 'reveal-md/_site/'
   # Single deploy job since we're just deploying to GitHub Pages environment
   deploy:
     name: Deploy
