@@ -34,11 +34,10 @@ jobs:
         run: npm install
       - name: Run Reveal-MD build
         run: npm run build
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          name: website
-          path: _site/
+          path: '_site/*'
   # Single deploy job since we're just deploying to GitHub Pages environment
   deploy:
     name: Deploy
