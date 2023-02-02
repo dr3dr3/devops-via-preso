@@ -23,7 +23,8 @@ concurrency:
 jobs:
   # Build static site using Reveal-MD
   build:
-    name: Build
+    name: Build 🔨
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -40,8 +41,9 @@ jobs:
           path: 'reveal-md/_site/'
   # Single deploy job since we're just deploying to GitHub Pages environment
   deploy:
-    name: Deploy
+    name: Deploy 🚀
     needs: build
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
