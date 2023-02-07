@@ -16,7 +16,7 @@ permissions:
 jobs:
   # Build static site using Reveal-MD
   build:
-    name: Build 🔨
+    name: Build Reveal-MD 🔨
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -42,6 +42,6 @@ jobs:
           # TODO: need to change this to: ci-branchname (aka feature name) using: 
           # env:
             # BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-          path: revealmd/_site
+          path: reveal-md/_site
       - name: Summary
         run: echo "### Build complete! :thumbsup:" >> $GITHUB_STEP_SUMMARY
