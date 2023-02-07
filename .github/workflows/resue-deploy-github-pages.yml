@@ -1,5 +1,6 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: build-and-deploy-to-github-pages
+name: deploy-github-pages
+run-name: ${{ github.actor }} is deploying static site to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -21,36 +22,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build static site using Reveal-MD
-  build:
-    name: Build 🔨
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-      - name: Setup Reveal-MD
-        run: bash ./setup-revealmd.sh
-      - name: Install Reveal-MD
-        run: npm install
-      - name: Run Reveal-MD build
-        run: npm run build
-      - name: Upload Pages artifacts
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: 'reveal-md/_site/'
   # Single deploy job since we're just deploying to GitHub Pages environment
   deploy:
+    # ADD If condition for only site related changes (by glob)
     name: Deploy 🚀
-    needs: build
     timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: 'ci-build-site'
+          # TODO: Change to ci-feature-name (aka branch name)
+          path: _site
+      - name: Upload Pages artifacts
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: _site/
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Deploy to GitHub Pages 🚀
         id: deployment
         uses: actions/deploy-pages@v1
+      - name: Summary
+        run: echo "### Deploy complete! :green_apple:" >> $GITHUB_STEP_SUMMARY        
+      # - name: Complete
+      #   run: echo "🍏 This job's status is ${{ job.status }}."

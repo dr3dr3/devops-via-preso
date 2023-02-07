@@ -1,0 +1,26 @@
+# Continuous Integration Workflow
+name: ci-caller-workflow
+run-name: Continuous integration triggered by ${{ github.event_name }}
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches-ignore: [$default-branch]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Build static site using Reveal-MD
+  build:
+    uses: ./.github/workflows/reuse-build-revealmd.yml@main
+    # with: 
+      # xxx: string-here
+
+  # Upload testing result artifacts
+  # TODO
+  # Update related issue on repo
+  # TODO: uses:reuse-update-issue.yml
