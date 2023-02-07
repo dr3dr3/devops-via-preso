@@ -15,8 +15,9 @@ permissions:
 
 jobs:
   # Build static site using Reveal-MD
-  build:
-    uses: ./.github/workflows/reuse-build-revealmd.yml@main
+  build-ci:
+    name: Build CI 🔨
+    uses: ./.github/workflows/reuse-build-revealmd.yml
     # with: 
       # xxx: string-here
 
