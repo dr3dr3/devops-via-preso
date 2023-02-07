@@ -1,0 +1,47 @@
+# Build Reveal-MD slide decks
+name: build-revealmd
+run-name: ${{ github.actor }} is building Reveal-MD slide decks
+
+on:
+  workflow_call:
+    # inputs:
+      # xxx:
+        # required: true
+        # type: string
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+
+jobs:
+  # Build static site using Reveal-MD
+  build:
+    name: Build 🔨
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+      - name: Clone Reveal-MD
+        run: git clone https://github.com/webpro/reveal-md.git
+      - name: Copy markdown files to Reveal-MD
+        run: rsync -avh markdown reveal-md
+      - name: Install Reveal-MD
+        run: npm ci
+      - name: Run tests from Reveal-MD
+        run: npm run test
+      - name: Run Reveal-MD build
+        run: npm run build
+      # Upload test artifacts: 
+      # INPUT = CI... then 'CI-Testing-FeatureBranchName'
+      # INPUT = STG... then 'STG-Testing-PR-ID'
+      # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ci-build-site
+          # TODO: need to change this to: ci-branchname (aka feature name) using: 
+          # env:
+            # BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+          path: revealmd/_site
+      - name: Summary
+        run: echo "### Build complete! :thumbsup:" >> $GITHUB_STEP_SUMMARY

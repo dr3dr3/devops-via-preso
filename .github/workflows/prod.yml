@@ -1,0 +1,25 @@
+# Continuous Deployment Workflow
+name: stg-caller-workflow
+run-name: Continuous deployment triggered by ${{ github.event_name }}
+
+on:
+  # Merge on main branch
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# JOBS:
+# test live API's are responsive
+# reuse-build-revealmd.yml
+# clone out blue/green rego (per input)...
+# ...delete _site folder
+# ...copy _site folder from build to _site folder (replace above)
+# ...changes to .github/workflows (if any)
+# update AWS routing...
+# ... 10% of traffic to new
+# ... after 10 days no issues then 100%
+# ... if issue, then 0% and sent alert and trigger rollback
+# run PVT tests (alert if any issues)

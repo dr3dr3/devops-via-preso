@@ -1,0 +1,33 @@
+# Continuous Delivery Workflow
+name: stg-caller-workflow
+run-name: Continuous delivery triggered by ${{ github.event_name }}
+
+on:
+  # Pull Request opened on default branch
+  pull_request: 
+    types:
+      - opened
+    branches: [$default-branch]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Build static site using Reveal-MD
+  build:
+    uses: ./.github/workflows/reuse-build-revealmd.yml@main
+    # with: 
+      # xxx: string-here
+
+  # Upload testing result artifacts (maybe additional testing over CI)
+  # TODO
+  # PR Checks
+  # TODO: CI Testing Results
+  # TODO: Additional STG Testing Results
+  deploy-to-github-pages:
+    uses: ./.github/workflows/reuse-deploy-github-pages.yml@main
+    # with: 
+      # xxx: string-here
