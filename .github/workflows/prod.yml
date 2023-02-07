@@ -1,5 +1,5 @@
 # Continuous Deployment Workflow
-name: stg-caller-workflow
+name: prod-caller-workflow
 run-name: Continuous deployment triggered by ${{ github.event_name }}
 
 on:
