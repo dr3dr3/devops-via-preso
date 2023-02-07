@@ -1,1 +1,6 @@
 # Deploy to another repo
+name: deploy-to-repo
+run-name: Deploy to another GitHub Repo
+
+on:
+  workflow_dispatch:

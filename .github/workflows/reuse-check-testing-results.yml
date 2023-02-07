@@ -1,3 +1,8 @@
 # Checks on Pull Request
 # - CI testing results
 # - STG testing results
+name: check-testing-results
+run-name: Check Testing Results
+
+on:
+  workflow_dispatch:

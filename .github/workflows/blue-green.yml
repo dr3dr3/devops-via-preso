@@ -1,3 +1,8 @@
 # Blue / Green deployment
 # This caller workflow lives inside Blue / Green repos
 # Call reuse-deploy-github-pages.yml from master repo
+name: blue-green-deployment
+run-name: Blue / Green Deployment
+
+on:
+  workflow_dispatch:
