@@ -44,7 +44,7 @@ jobs:
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ format('{0}-{1}, ci, inputs.branch-name }}
+          name: ${{ format('{0}-{1}, ci, inputs.branch-name) }}
           path: reveal-md/_site
           retention-days: 2
       - name: Summary
