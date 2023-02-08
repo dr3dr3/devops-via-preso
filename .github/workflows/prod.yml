@@ -3,13 +3,22 @@ name: prod-caller-workflow
 run-name: Continuous deployment triggered by ${{ github.event_name }}
 
 on:
-  # Merge on main branch
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: [$default-branch]
 
 permissions:
   contents: read
+
+jobs:
+  # Build static site using Reveal-MD
+  build-prod:
+    name: Build PROD
+    uses: ./.github/workflows/reuse-build-revealmd.yml
+    with: 
+      branch-name: ${{ github.ref_name }}
+      deploy-stage: 'prod'
+
 
 # JOBS:
 # test live API's are responsive

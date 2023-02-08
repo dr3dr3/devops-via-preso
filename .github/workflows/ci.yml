@@ -3,7 +3,7 @@ name: ci-caller-workflow
 run-name: Continuous integration triggered by ${{ github.event_name }}
 
 on:
-  # Runs on pushes targeting the default branch
+  # Runs on pushes targeting 'feature branches' (ie NOT the default branch)
   push:
     branches-ignore: [$default-branch]
 

@@ -54,13 +54,5 @@ jobs:
       # INPUT = CI... then 'CI-Testing-FeatureBranchName'
       # INPUT = STG... then 'STG-Testing-PR-ID'
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ci-build-site
-          # TODO: need to change this to: ci-branchname (aka feature name) using: 
-          # env:
-            # BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-          path: reveal-md/_site
       - name: Summary
         run: echo "### Build complete! :thumbsup:" >> $GITHUB_STEP_SUMMARY
