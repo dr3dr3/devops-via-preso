@@ -27,7 +27,7 @@ jobs:
   # TODO: CI Testing Results
   # TODO: Additional STG Testing Results
   deploy-to-github-pages:
-  name: Deploy GHP(STG)
+    name: Deploy GHP(STG)
     needs: build-stg
     uses: ./.github/workflows/reuse-deploy-github-pages.yml
     with:
