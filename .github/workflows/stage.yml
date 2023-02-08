@@ -22,6 +22,7 @@ jobs:
       branch-name: ${{ github.ref_name }}
       deploy-stage: 'stg'
 
+
   # Upload testing result artifacts (maybe additional testing over CI)
   # TODO
   # PR Checks
