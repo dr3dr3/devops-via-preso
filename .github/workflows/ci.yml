@@ -16,10 +16,10 @@ permissions:
 jobs:
   # Build static site using Reveal-MD
   build-ci:
-    name: Build CI 🔨
+    name: Build CI
     uses: ./.github/workflows/reuse-build-revealmd.yml
-    # with: 
-      # xxx: string-here
+    with: 
+      branch-name: ${{ github.ref_name }}
 
   # Upload testing result artifacts
   # TODO
