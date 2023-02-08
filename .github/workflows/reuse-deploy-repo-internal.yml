@@ -1,5 +1,5 @@
 # Deploy to another repo
-name: deploy-to-repo
+name: deploy-to-repo-internal
 run-name: Deploy to another GitHub Repo
 
 on:

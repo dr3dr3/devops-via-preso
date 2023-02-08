@@ -7,7 +7,6 @@ on:
   pull_request: 
     types:
       - opened
-    branches: [$default-branch]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,6 +20,8 @@ jobs:
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
       branch-name: ${{ github.ref_name }}
+      deploy-stage: 'stg'
+
 
   # Upload testing result artifacts (maybe additional testing over CI)
   # TODO
@@ -29,5 +30,6 @@ jobs:
   # TODO: Additional STG Testing Results
   deploy-to-github-pages:
     uses: ./.github/workflows/reuse-deploy-github-pages.yml
-    # with: 
-      # xxx: string-here
+    with:
+      branch-name: ${{ github.ref_name }}
+      deploy-stage: 'stg'

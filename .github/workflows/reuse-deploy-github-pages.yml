@@ -3,12 +3,16 @@ name: deploy-github-pages
 run-name: ${{ github.actor }} is deploying static site to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: [$default-branch]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      branch-name:
+        required: true
+        type: string
+      deploy-stage:
+        required: true
+        type: string
+        # values: 'stg', 'prd'
+        default: 'stg'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -37,8 +41,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: 'ci-build-site'
-          # TODO: Change to ci-feature-name (aka branch name)
+          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.branch-name) }}
           path: _site
       - name: Upload Pages artifacts
         uses: actions/upload-pages-artifact@v1
@@ -51,5 +54,3 @@ jobs:
         uses: actions/deploy-pages@v1
       - name: Summary
         run: echo "### Deploy complete! :green_apple:" >> $GITHUB_STEP_SUMMARY        
-      # - name: Complete
-      #   run: echo "🍏 This job's status is ${{ job.status }}."

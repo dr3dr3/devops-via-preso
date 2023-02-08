@@ -20,6 +20,7 @@ jobs:
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
       branch-name: ${{ github.ref_name }}
+      deploy-stage: 'ci'
 
   # Upload testing result artifacts
   # TODO
