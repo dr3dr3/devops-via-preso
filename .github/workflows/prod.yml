@@ -11,7 +11,7 @@ on:
 #  contents: read
 
 jobs:
-  # Build static site using Reveal-MD
+  # Add tag for next version
   add-tag:
     name: Add Tag
     uses: ./.github/workflows/reuse-tag-release.yml
