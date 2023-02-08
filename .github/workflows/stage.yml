@@ -8,15 +8,13 @@ on:
     types:
       - opened
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-permissions:
-  contents: read
+# permissions:
+#  contents: read
 
 jobs:
   # Build static site using Reveal-MD
-  build:
+  build-stg:
+    name: Build STG
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
       branch-name: ${{ github.ref_name }}
@@ -29,6 +27,8 @@ jobs:
   # TODO: CI Testing Results
   # TODO: Additional STG Testing Results
   deploy-to-github-pages:
+  name: Deploy GHP(STG)
+    needs: build-stg
     uses: ./.github/workflows/reuse-deploy-github-pages.yml
     with:
       branch-name: ${{ github.ref_name }}
