@@ -8,6 +8,11 @@ on:
       branch-name:
         required: true
         type: string
+      deploy-stage:
+        required: true
+        type: string
+        # values: 'ci', 'stg', 'prd'
+        default: 'ci'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -42,14 +47,15 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ format('{0}_{1}', 'ci-build', inputs.branch-name) }}
+          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.branch-name) }}
           path: reveal-md/_site
           retention-days: 2
       # Upload test artifacts: 
       # INPUT = CI... then 'CI-Testing-FeatureBranchName'
       # INPUT = STG... then 'STG-Testing-PR-ID'
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
-      - uses: actions/upload-artifact@v3
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: ci-build-site
           # TODO: need to change this to: ci-branchname (aka feature name) using: 
