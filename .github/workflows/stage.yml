@@ -8,8 +8,10 @@ on:
     types:
       - opened
 
-# permissions:
-#  contents: read
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   # Build static site using Reveal-MD
