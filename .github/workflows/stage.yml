@@ -33,5 +33,5 @@ jobs:
     needs: build-stg
     uses: ./.github/workflows/reuse-deploy-github-pages.yml
     with:
-      branch-name: ${{ format('{0}-{1}', 'pr', github.head_ref//\//-) }}
+      branch-name: ${{ format('{0}-{1}', 'pr', github.ref_name) }}
       deploy-stage: 'stg'
