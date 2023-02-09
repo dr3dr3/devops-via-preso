@@ -18,6 +18,10 @@ jobs:
     with: 
       branch-name: ${{ github.ref_name }}
       deploy-stage: 'ci'
+  # Add tag for next version
+  add-tag:
+    name: Add Tag
+    uses: ./.github/workflows/reuse-tag-release.yml      
 
   # Upload testing result artifacts
   # TODO

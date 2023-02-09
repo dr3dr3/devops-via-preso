@@ -7,17 +7,14 @@ on:
   push:
     branches: [$default-branch]
 
-permissions:
-  contents: read
+#permissions:
+#  contents: read
 
 jobs:
-  # Build static site using Reveal-MD
-  build-prod:
-    name: Build PROD
-    uses: ./.github/workflows/reuse-build-revealmd.yml
-    with: 
-      branch-name: ${{ github.ref_name }}
-      deploy-stage: 'prod'
+  # Add tag for next version
+  add-tag:
+    name: Add Tag
+    uses: ./.github/workflows/reuse-tag-release.yml
 
 
 # JOBS:

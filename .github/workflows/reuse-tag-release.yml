@@ -1,0 +1,54 @@
+# Add tag to Main and create Release in GitHub.com
+name: tag-release
+run-name: Tag and Release 🚀
+
+on:
+  workflow_call:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# permissions:
+#  contents: read
+
+jobs:
+  # Build static site using Reveal-MD
+  # if branch = main
+  semver-tag:
+    name: SemVer Tag
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get Next Tag Version
+        id: next-version
+        uses: paulhatch/semantic-version@v5.0.3
+        with:
+          tag_prefix: 'v'
+          version_format: '${major}.${minor}.${patch}'
+      - name: Display SemVer
+        run: echo "${{ steps.next-version.outputs.version_tag }}"
+      - name: Get NPM Package Version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.2.3
+      - name: Display Package Version
+        run: echo "${{ steps.package-version.outputs.current-version }}"
+      - name: Versions Match
+        if: ${{ steps.next-version.outputs.version_tag == format('{0}{1}', 'v', steps.package-version.outputs.current-version) }}
+        run: echo "{version-match}={true}" >> $GITHUB_OUTPUT
+      - name: Versions Do Not Match
+        if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}', 'v', steps.package-version.outputs.current-version) }}
+        run: echo "{version-match}={false}" >> $GITHUB_OUTPUT
+
+#      - name: Create tag
+#        uses: actions/github-script@v6
+#        with:
+#          script: |
+#            github.rest.git.createRef({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              ref: 'refs/tags/<tagname>',
+#              sha: context.sha
+#            })
+      
