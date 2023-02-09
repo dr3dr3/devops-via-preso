@@ -12,8 +12,8 @@ on:
 jobs:
   # Build static site using Reveal-MD
   # if branch = main
-  tag:
-    name: Tag
+  semver-tag:
+    name: SemVer Tag
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -21,16 +21,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@latest
+      - name: Next Version
+        id: next-version
+        uses: paulhatch/semantic-version@latest
         with:
-          versionSpec: '5.x'
-      - name: Determine Version
-        uses: gittools/actions/gitversion/execute@latest
+          tag_prefix: 'v'
+          format: '${major}.${minor}.${patch}'
       - name: Display SemVer
         run: |
-          echo "SemVer: $GITVERSION_SEMVER" && echo "$version" && echo "$major.$minor.$patch"
-          echo "SemVer-Short: $GITVERSION_SEMVER"
+          echo "${{ steps.next-version.outputs.version_tag }}"
 
 #      - name: Create tag
 #        uses: actions/github-script@v6
