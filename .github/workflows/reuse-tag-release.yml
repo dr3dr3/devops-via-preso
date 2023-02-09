@@ -33,8 +33,13 @@ jobs:
       - name: Get NPM Package Version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.2.3
-      - name: Compare Tag vs NPM Package Version
-        run: echo "::notice file=package.json,line=3,col=17::Update version to match tag ${{ steps.next-version.outputs.version_tag }}"
+      # Make conditional below  
+      - name: Versions Match
+        if: ${{ steps.next-version.outputs.version_tag == format('{0}{1}, 'v', steps.package-version.current-version)}}
+        run: echo "{version-match}={true}" >> $GITHUB_OUTPUT
+      - name: Versions Do Not Match
+        if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}, 'v', steps.package-version.current-version)}}
+        run: echo "{version-match}={false}" >> $GITHUB_OUTPUT
 
 #      - name: Create tag
 #        uses: actions/github-script@v6
