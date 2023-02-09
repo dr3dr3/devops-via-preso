@@ -22,14 +22,16 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.7
+        uses: gittools/actions/gitversion/setup@latest
         with:
           versionSpec: '5.x'
       - name: Determine Version
-        uses: gittools/actions/gitversion/execute@v0.9.7
+        uses: gittools/actions/gitversion/execute@latest
       - name: Display SemVer
         run: |
-          echo "SemVer: $GITVERSION_SEMVER" && echo "$version" && echo "$major.$minor.$patch"          
+          echo "SemVer: $GITVERSION_SEMVER" && echo "$version" && echo "$major.$minor.$patch"
+          echo "SemVer-Short: $GITVERSION_SEMVER"
+
 #      - name: Create tag
 #        uses: actions/github-script@v6
 #        with:

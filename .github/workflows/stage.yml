@@ -19,7 +19,7 @@ jobs:
     name: Build STG
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
-      branch-name: ${{ github.ref_name }}
+      branch-name: ${{ github.sha }}
       deploy-stage: 'stg'
 
 
