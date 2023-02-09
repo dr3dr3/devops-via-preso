@@ -28,17 +28,17 @@ jobs:
           tag_prefix: 'v'
           version_format: '${major}.${minor}.${patch}'
       - name: Display SemVer
-        run: |
-          echo "${{ steps.next-version.outputs.version_tag }}"
+        run: echo "${{ steps.next-version.outputs.version_tag }}"
       - name: Get NPM Package Version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.2.3
-      # Make conditional below  
+      - name: Display Package Version
+        run: echo "${{ steps.package-version.current-version }}"
       - name: Versions Match
         if: ${{ steps.next-version.outputs.version_tag == format('{0}{1}', 'v', steps.package-version.current-version) }}
         run: echo "{version-match}={true}" >> $GITHUB_OUTPUT
       - name: Versions Do Not Match
-        if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}', 'v', steps.package-version.current-version)}}
+        if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}', 'v', steps.package-version.current-version) }}
         run: echo "{version-match}={false}" >> $GITHUB_OUTPUT
 
 #      - name: Create tag
