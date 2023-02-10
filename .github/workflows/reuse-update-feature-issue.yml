@@ -1,7 +1,0 @@
-# Identify the issue related to the current branch (for feature branches)
-# Add an update to that issue
-name: update-feature-issue
-run-name: Update an issue
-
-on:
-  workflow_dispatch:

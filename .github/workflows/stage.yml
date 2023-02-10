@@ -4,9 +4,12 @@ run-name: Continuous delivery triggered by ${{ github.event_name }}
 
 on:
   # Pull Request opened on default branch
-  pull_request: 
-    types:
-      - opened
+  # pull_request: 
+  #  types:
+  #    - opened
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:      
 
 permissions:
   contents: read

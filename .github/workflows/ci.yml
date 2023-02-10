@@ -1,11 +1,14 @@
-# Continuous Integration Workflow
-name: ci-caller-workflow
-run-name: Continuous integration triggered by ${{ github.event_name }}
+# CI/CD pipeline for new features
+name: cicd-pipeline
+run-name: CI-CD pipeline for issue ${{ github.ref_name }}
 
 on:
-  # Runs on pushes targeting 'feature branches' (ie NOT the default branch)
-  push:
-    branches-ignore: [$default-branch]
+  # Runs on pushes targeting 'feature branches' (any branch that is NOT the default branch)
+  # push:
+  #  branches-ignore: [$default-branch]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 # permissions:
 #  contents: read
