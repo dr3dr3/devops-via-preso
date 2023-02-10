@@ -11,7 +11,7 @@ on:
       deploy-stage:
         required: true
         type: string
-        # values: 'ci', 'stg', 'prd'
+        # values: 'ci', 'stg', 'prd' (do we need one for Canary?)
         default: 'ci'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -54,5 +54,29 @@ jobs:
       # INPUT = CI... then 'CI-Testing-FeatureBranchName'
       # INPUT = STG... then 'STG-Testing-PR-ID'
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
-      - name: Summary
-        run: echo "### Build complete! :thumbsup:" >> $GITHUB_STEP_SUMMARY
+  job-success:
+    name: Check jobs successfull
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: success() # only run when all shards have passed
+    # store success output flag for ci job
+    outputs:
+      success: ${{ steps.setoutput.outputs.success }}
+    steps:
+      - id: setoutput
+        run: echo "::set-output name=success::true"
+  pr-check:
+    name: Pull Request Check
+    runs-on: ubuntu-latest
+    if: always() # always run, so we never skip the check
+    needs: [build, job-success]
+    steps:
+      - run: |
+          passed="${{ needs.job-success.outputs.success }}"
+          if [[ $passed == "true" ]]; then
+            echo "### Build success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          else
+            echo "### Build failed! :thumbsdown:" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
