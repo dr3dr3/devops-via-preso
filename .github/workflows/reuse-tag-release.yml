@@ -10,7 +10,6 @@ on:
 #  contents: read
 
 jobs:
-  # Build static site using Reveal-MD
   # if branch = main
   semver-tag:
     name: SemVer Tag
