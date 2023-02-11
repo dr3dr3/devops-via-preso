@@ -75,7 +75,7 @@ jobs:
     steps:
       - run: |
           passed="${{ needs.job-success.outputs.success }}"
-          if [[ $passed == "true" ]]; then
+          if [[ $passed == true ]]; then
             echo "### Build success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
             exit 0
           else
