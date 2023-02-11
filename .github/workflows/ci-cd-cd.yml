@@ -22,6 +22,9 @@ jobs:
   # (1) TODO: Create PR using actions/script v6 and CLI commands or API call
   # https://stackoverflow.com/questions/70698626/github-action-to-create-a-branch-and-pull-request
   # https://cli.github.com/manual/gh_pr_create
+  pr-ci: 
+    name: PR 4 CI
+    uses: ./.github/workflows/reuse-pr-create.yml
 
   # Add data for metrics: "lead time to change" (first push to remote)
 

@@ -102,7 +102,7 @@ jobs:
     name: PR Check
     runs-on: ubuntu-latest
     if: always() # always run, so we never skip the check
-    needs: [build, job-success]
+    needs: [build, job-check]
     steps:
 
       - run: |
