@@ -22,6 +22,8 @@ jobs:
   pr-ci: 
     name: PR 4 CI
     uses: ./.github/workflows/reuse-pr-create.yml
+    permissions:
+      pull-requests: write
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
