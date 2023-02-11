@@ -24,6 +24,8 @@ jobs:
     name: Build Reveal-MD 🔨
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    outputs:
+      test-output: ${{ steps.test-result.outputs.test-output }}
     steps:
 
       - name: Checkout 🛎️
@@ -47,17 +49,17 @@ jobs:
         run: npm ci
 
       - name: Run tests from Reveal-MD
+        id: test-result
         run: |
           var=$(npm run test)
-          echo "{test-result-1}={$var}"
-          echo $var
+          echo "test-output=$var" >> $GITHUB_OUTPUT
 
       - name: GitHub Step Summary for Test
-        run: echo "### Test Summary \n\n ${{ steps.build.outputs.test-result-1 }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "### Test Summary /n/n ${{ steps.build.outputs.test-result }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Evaluate Test Results
         run: |
-          if [[ "${{ steps.build.outputs.test-result-1 }}" == *"failed"* ]]; then
+          if [[ "${{ steps.build.outputs.test-result }}" == *"failed"* ]]; then
             echo "REVEAL-MD TEST FAILED"
             exit 1
           fi
@@ -88,10 +90,10 @@ jobs:
     steps:
 
       - id: setoutput
-        run: echo "{success}={true}" >> $GITHUB_OUTPUT
+        run: echo "success=true" >> $GITHUB_OUTPUT
 
       - name: GitHub Step Summary for Job success
-        run: echo "### Workflow Jobs Completed \n\n Success is ${{steps.setoutput.outputs.success}}" >> $GITHUB_STEP_SUMMARY
+        run: echo "### Workflow Jobs Completed /n/n Success is ${{steps.setoutput.outputs.success}}" >> $GITHUB_STEP_SUMMARY
 
   pr-check:
     name: PR Check 📋
@@ -102,7 +104,7 @@ jobs:
 
       - run: |
           passed="${{ needs.job-success.outputs.success }}"
-          if [[ $passed == true ]]; then
+          if [[ $passed == "true" ]]; then
             echo "### Build success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
             exit 0
           else
