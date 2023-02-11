@@ -45,8 +45,8 @@ jobs:
       - name: Install Reveal-MD
         run: npm ci
 
-      - name: Fail test
-        run: rsync slidify.spec.js reveal-md/test
+      #- name: Fail test
+      #  run: rsync slidify.spec.js reveal-md/test
 
       # If this tests fail the NPM error will fail this job
       - name: Run tests from Reveal-MD

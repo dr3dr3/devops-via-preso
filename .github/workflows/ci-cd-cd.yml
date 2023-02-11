@@ -33,6 +33,7 @@ jobs:
   # Build static site using Reveal-MD
   build-ci:
     name: Build CI
+    needs: [pr-ci]
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
       branch-name: ${{ github.ref_name }}
