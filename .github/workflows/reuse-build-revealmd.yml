@@ -57,11 +57,13 @@ jobs:
       # var=$(npm run test)
 
       - name: GitHub Step Summary for Test
-        run: echo "### Test Summary /n/n ${{ steps.build.outputs.test-result }}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "### Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.test-result.outputs.test-output }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Evaluate Test Results
         run: |
-          if [[ "${{ steps.build.outputs.test-result }}" == *"failed"* ]]; then
+          if [[ "${{ steps.test-result.outputs.test-output }}" == *"failed"* ]]; then
             echo "REVEAL-MD TEST FAILED"
             exit 1
           fi
