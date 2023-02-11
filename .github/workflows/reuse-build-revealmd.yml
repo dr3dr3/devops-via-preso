@@ -52,7 +52,7 @@ jobs:
         id: test-result
         run: |
           var="failed testing test"
-          echo "{test-output}="failed testing B" >> $GITHUB_OUTPUT
+          echo "{test-output}={false} >> $GITHUB_OUTPUT
 
       # var=$(npm run test)
 
