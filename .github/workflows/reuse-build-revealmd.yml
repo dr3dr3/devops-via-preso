@@ -49,7 +49,7 @@ jobs:
         run: npm ci
 
       - name: Run tests from Reveal-MD
-        id: testing
+        id: test-npmruntest
         run: echo "TEST_RESULT=$(npm run lint)" >> $GITHUB_OUTPUT
 
       # var=$(npm run test)
@@ -57,11 +57,11 @@ jobs:
       - name: GitHub Step Summary for Test
         run: |
           echo "### Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "Result is ${{ steps.testing.outputs.TEST_RESULT }}" >> $GITHUB_STEP_SUMMARY
+          echo "Result is ${{ steps.test-npmruntest.outputs.TEST_RESULT }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Evaluate Test Results
         run: |
-          if [[ "${{ steps.testing.outputs.TEST_RESULT }}" == *"failed"* ]]; then
+          if [[ "${{ steps.test-npmruntest.outputs.TEST_RESULT }}" == *"failed"* ]]; then
             echo "REVEAL-MD TEST FAILED"
             exit 1
           fi
