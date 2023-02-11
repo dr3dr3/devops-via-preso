@@ -10,8 +10,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# permissions:
-#  contents: read
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   # Check feature (id#) has not been done before (in case local repo keeps using branch and then pushes)
