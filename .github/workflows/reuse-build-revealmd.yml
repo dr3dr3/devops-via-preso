@@ -25,39 +25,58 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout 🛎️
         uses: actions/checkout@v3
       # Use actions/setup-node to enable caching
       # Node version on GitHub runner is v16.19
+
       - name: Setup Node.JS
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
+
       - name: Clone Reveal-MD
         run: git clone https://github.com/webpro/reveal-md.git
+
       - name: Copy markdown files to Reveal-MD
         run: rsync -avh markdown reveal-md
+
       - name: Install Reveal-MD
         run: npm ci
+
       - name: Run tests from Reveal-MD
-        run: npm run test >> test-1.txt
-      - name: Test results to output
-        run: echo "{test-result-1}={ tail -n 3 test-1.txt }"
-      - run: |
-          echo "${{ steps.build.outputs.test-result-1 }}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          var=$(npm run test)
+          echo "{test-result-1}={$var}"
+          echo $var
+
+      - name: GitHub Step Summary for Test
+        run: echo "### Test Summary \n\n ${{ steps.build.outputs.test-result-1 }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Evaluate Test Results
+        run: |
+          if [[ "${{ steps.build.outputs.test-result-1 }}" == *"failed"* ]]; then
+            echo "REVEAL-MD TEST FAILED"
+            exit 1
+          fi
+
       - name: Run Reveal-MD build
         run: npm run build
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.branch-name) }}
           path: reveal-md/_site
           retention-days: 2
+
       # Upload test artifacts: 
       # INPUT = CI... then 'CI-Testing-FeatureBranchName'
       # INPUT = STG... then 'STG-Testing-PR-ID'
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
+
   job-success:
     name: Jobs 🧿
     needs: [build]
@@ -67,14 +86,20 @@ jobs:
     outputs:
       success: ${{ steps.setoutput.outputs.success }}
     steps:
+
       - id: setoutput
         run: echo "{success}={true}" >> $GITHUB_OUTPUT
+
+      - name: GitHub Step Summary for Job success
+        run: echo "### Workflow Jobs Completed \n\n Success is ${{steps.setoutput.outputs.success}}" >> $GITHUB_STEP_SUMMARY
+
   pr-check:
     name: PR Check 📋
     runs-on: ubuntu-latest
     if: always() # always run, so we never skip the check
     needs: [build, job-success]
     steps:
+
       - run: |
           passed="${{ needs.job-success.outputs.success }}"
           if [[ $passed == true ]]; then
