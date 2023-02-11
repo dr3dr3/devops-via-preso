@@ -50,18 +50,19 @@ jobs:
 
       - name: Run tests from Reveal-MD
         id: test-npmruntest
-        run: echo "TEST_RESULT=$(npm run lint)" >> $GITHUB_OUTPUT
+        run: npm run test
+        #run: echo "TEST_RESULT=$(npm run lint)" >> $GITHUB_OUTPUT
 
       # var=$(npm run test)
 
       - name: GitHub Step Summary for Test
         run: |
           echo "### Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "Result is ${{ steps.test-npmruntest.outputs.TEST_RESULT }}" >> $GITHUB_STEP_SUMMARY
+          echo "Result is $(npm run test)" >> $GITHUB_STEP_SUMMARY
 
       - name: Evaluate Test Results
         run: |
-          if [[ "${{ steps.test-npmruntest.outputs.TEST_RESULT }}" == *"failed"* ]]; then
+          if [[ "$(npm run test)" == *"failed"* ]]; then
             echo "REVEAL-MD TEST FAILED"
             exit 1
           fi
