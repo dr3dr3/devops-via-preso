@@ -44,6 +44,8 @@ jobs:
         run: npm run test >> test-1.txt
       - name: Test results to output
         run: echo "{test-result-1}={ tail -n 3 test-1.txt }"
+      - run: |
+          echo "${{ steps.build.outputs.test-result-1 }}" >> $GITHUB_STEP_SUMMARY
       - name: Run Reveal-MD build
         run: npm run build
       - name: Upload Build Artifacts
@@ -82,5 +84,3 @@ jobs:
             echo "### Build failed! :thumbsdown:" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
-      - run: |
-          echo "${{ steps.build.outputs.test-result-1 }}" >> $GITHUB_STEP_SUMMARY
