@@ -52,7 +52,7 @@ jobs:
         id: test-result
         run: |
           var=$(npm run test)
-          echo "test-output=$var" >> $GITHUB_OUTPUT
+          echo "{test-output}={$var}" >> $GITHUB_OUTPUT
 
       - name: GitHub Step Summary for Test
         run: echo "### Test Summary /n/n ${{ steps.build.outputs.test-result }}" >> $GITHUB_STEP_SUMMARY
@@ -90,7 +90,7 @@ jobs:
     steps:
 
       - id: setoutput
-        run: echo "success=true" >> $GITHUB_OUTPUT
+        run: echo "{success}={true}" >> $GITHUB_OUTPUT
 
       - name: GitHub Step Summary for Job success
         run: echo "### Workflow Jobs Completed /n/n Success is ${{steps.setoutput.outputs.success}}" >> $GITHUB_STEP_SUMMARY
