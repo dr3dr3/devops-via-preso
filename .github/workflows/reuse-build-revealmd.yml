@@ -79,8 +79,8 @@ jobs:
       # INPUT = STG... then 'STG-Testing-PR-ID'
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
 
-  job-success:
-    name: Jobs 🧿
+  job-check:
+    name: Jobs Check
     needs: [build]
     runs-on: ubuntu-latest
     if: success() # only run when all shards have passed
@@ -99,14 +99,14 @@ jobs:
           echo "Success is ${{steps.setoutput.outputs.SUCCESS}}" >> $GITHUB_STEP_SUMMARY
 
   pr-check:
-    name: PR Check 📋
+    name: PR Check
     runs-on: ubuntu-latest
     if: always() # always run, so we never skip the check
     needs: [build, job-success]
     steps:
 
       - run: |
-          passed="${{ needs.job-success.outputs.success }}"
+          passed="${{ needs.job-check.outputs.success }}"
           if [[ $passed == "true" ]]; then
             echo "### Build success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
             exit 0
