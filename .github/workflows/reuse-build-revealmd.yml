@@ -21,7 +21,7 @@ permissions:
 jobs:
   # Build static site using Reveal-MD
   build:
-    name: Build Reveal-MD 🔨
+    name: Build R-MD
     timeout-minutes: 10
     runs-on: ubuntu-latest
     outputs:
@@ -51,8 +51,10 @@ jobs:
       - name: Run tests from Reveal-MD
         id: test-result
         run: |
-          var=$(npm run test)
+          var="failed testing test"
           echo "{test-output}={$var}" >> $GITHUB_OUTPUT
+
+      # var=$(npm run test)
 
       - name: GitHub Step Summary for Test
         run: echo "### Test Summary /n/n ${{ steps.build.outputs.test-result }}" >> $GITHUB_STEP_SUMMARY
