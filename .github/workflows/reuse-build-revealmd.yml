@@ -49,11 +49,7 @@ jobs:
         run: npm ci
 
       - name: Run tests from Reveal-MD
-        id: test-npmruntest
         run: npm run test
-        #run: echo "TEST_RESULT=$(npm run lint)" >> $GITHUB_OUTPUT
-
-      # var=$(npm run test)
 
       - name: GitHub Step Summary for Test
         run: |
@@ -89,14 +85,17 @@ jobs:
     if: success() # only run when all shards have passed
     # store success output flag for ci job
     outputs:
-      success: ${{ steps.setoutput.outputs.success }}
+      success: ${{ steps.setoutput.outputs.SUCCESS }}
     steps:
 
-      - id: setoutput
-        run: echo "{success}={true}" >> $GITHUB_OUTPUT
+      - name: Set Output
+        id: setoutput
+        run: echo "SUCCESS=true" >> $GITHUB_OUTPUT
 
       - name: GitHub Step Summary for Job success
-        run: echo "### Workflow Jobs Completed /n/n Success is ${{steps.setoutput.outputs.success}}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "### Workflow Jobs Completed" >> $GITHUB_STEP_SUMMARY
+          echo "Success is ${{steps.setoutput.outputs.SUCCESS}}" >> $GITHUB_STEP_SUMMARY
 
   pr-check:
     name: PR Check 📋
