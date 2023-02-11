@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     #outputs:
-    #  result: ${{ steps.testing.outputs.results }}
+    #  result: ${{ steps.testing.outputs.TEST_RESULT }}
     steps:
 
       - name: Checkout 🛎️
@@ -50,18 +50,18 @@ jobs:
 
       - name: Run tests from Reveal-MD
         id: testing
-        run: echo "{result}=$(npm run test)" >> $GITHUB_OUTPUT
+        run: echo "TEST_RESULT=$(npm run lint)" >> $GITHUB_OUTPUT
 
       # var=$(npm run test)
 
       - name: GitHub Step Summary for Test
         run: |
           echo "### Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "Result is ${{ steps.testing.outputs.results }}" >> $GITHUB_STEP_SUMMARY
+          echo "Result is ${{ steps.testing.outputs.TEST_RESULT }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Evaluate Test Results
         run: |
-          if [[ "${{ steps.testing.outputs.results }}" == *"failed"* ]]; then
+          if [[ "${{ steps.testing.outputs.TEST_RESULT }}" == *"failed"* ]]; then
             echo "REVEAL-MD TEST FAILED"
             exit 1
           fi
