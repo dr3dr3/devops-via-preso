@@ -23,19 +23,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          prd = $(gh pr list -B main -H ${ github.ref_name })
+          prs=$(gh pr list \
+              --repo "$GITHUB_REPOSITORY" \
+              --json baseRefName,headRefName \
+              --jq '
+                  map(select(.baseRefName == "main" and .headRefName == $GITHUB_REF_NAME))
+                  | length
+              ')
           echo "Count of PRs: " $prs
           if ((prs > 0)); then
               echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
-
-#          prs=$(gh pr list \
-#              --repo "$GITHUB_REPOSITORY" \
-#              --json baseRefName,headRefName \
-#              --jq '
-#                  map(select(.baseRefName == "main" and .headRefName == "${ github.ref_name }"))
-#                  | length
-#              ')
 
       - name: Create pull request
         if: '!steps.check.outputs.skip'
