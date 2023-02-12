@@ -18,11 +18,14 @@ jobs:
   pr-ci: 
     name: PR-CI
     timeout-minutes: 10
-    runs-on: ubuntu-latest    
     permissions:
       pull-requests: write
+    runs-on: ubuntu-latest    
     steps:
 
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        
       - name: New-Reopen-PR
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} -B main -H ${{ github.ref_name }}
         env:
