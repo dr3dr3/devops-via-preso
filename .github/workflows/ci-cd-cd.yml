@@ -59,8 +59,7 @@ jobs:
     name: PR Merge Close
     needs: [build-ci]
     timeout-minutes: 10
-    permissions:
-      pull-requests: write
+    permissions: write-all
     runs-on: ubuntu-latest    
     steps:
 
