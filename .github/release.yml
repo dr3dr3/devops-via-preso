@@ -1,0 +1,34 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+    authors:
+      - octocat
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - breaking-change
+    - title: Exciting New Features 🎉
+      labels:
+        - feature
+    - title: Content Changes and Additions 🎗
+      labels:
+        - content
+    - title: Fixes 🔧
+      labels:
+        - fix
+    - title: Documentation Improvements 📄
+      labels:
+        - documentation
+    - title: Automation and Workflows 📎
+      labels:
+        - automate
+    - title: Quality and Testing Changes 🎆
+      labels:
+        - quality
+    - title: Style Improvements 📔
+      labels:
+        - style
+    - title: Other Changes
+      labels:
+        - "*"
