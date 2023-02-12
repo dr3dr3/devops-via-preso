@@ -14,13 +14,9 @@ jobs:
   # Check feature (id#) has not been done before (in case local repo keeps using branch and then pushes)
   # If already done... then??? Maybe append "part 2" as pattern... to PR and release etc
 
-  # Create PR on first push to remote (if doesn't exist)
-  # (1) TODO: Does PR exist that matches this feature-name (branch-name)
-  # (1) TODO: Create PR using actions/script v6 and CLI commands or API call
-  # https://stackoverflow.com/questions/70698626/github-action-to-create-a-branch-and-pull-request
-  # https://cli.github.com/manual/gh_pr_create
+  # Create PR for this feature (if does not exist)
   pr-ci: 
-    name: PR 4 CI
+    name: PR-CI
     uses: ./.github/workflows/reuse-pr-create.yml
     permissions:
       pull-requests: write
@@ -31,15 +27,13 @@ jobs:
 
   # Build static site using Reveal-MD
   build-ci:
-    name: Build CI
+    name: Build-CI
     needs: [pr-ci]
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
       branch-name: ${{ github.ref_name }}
       deploy-stage: 'ci'
-  # (2) TODO: Tests to output/success
-  # https://brunoscheufler.com/blog/2022-04-09-the-required-github-status-check-that-wasnt
-  # (3) TODO: PR Checks for Build/Tests
+  # (1) TODO: PR Checks for Build/Tests
   # https://sagarsonwane230797.medium.com/automate-build-checks-and-slack-notification-with-github-actions-3b7eb702dae6
   # https://josh-ops.com/posts/using-github-checks-api/
 
@@ -55,7 +49,7 @@ jobs:
   # Comment (keyword) on PR (so automatically closes issue)
 
   # Tag and release (post merge to main)
-  # TODO: Using PR merge commit SHA (Main branch) add tag using below (ensure doing annotated tag)
+  # (2) TODO: Using PR merge commit SHA (Main branch) add tag using below (ensure doing annotated tag)
   # https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-tag-an-old-Git-commit-id
 
   # Add tag for next version
@@ -63,7 +57,7 @@ jobs:
   #   name: Add Tag
   #   uses: ./.github/workflows/reuse-tag-release.yml      
 
-  # Dispatch to deploy to Stage
+  # (3) Dispatch to deploy to Stage
   # TODO: Setup repo for this and workflow
   # Stage repo workflow: 1) get build artifacts... 2) add stage config... 3) deploy to GHP... 4) do smoke testing
   # Workflow above calls each point above, which is a workflow in this repo (reuse)
