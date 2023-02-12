@@ -25,6 +25,8 @@ jobs:
 
       - name: New-Reopen-PR
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} -B main -H ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
