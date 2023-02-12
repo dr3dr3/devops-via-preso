@@ -57,6 +57,7 @@ jobs:
   # Create PR for this feature (if does not exist)
   pr-merge-close: 
     name: PR Merge Close
+    needs: [build-ci]
     timeout-minutes: 10
     permissions:
       pull-requests: write
@@ -67,7 +68,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Merge PR
-        run: gh pr merge --auto --subject "Merge ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
+        run: gh pr merge --auto --subject "Merge PR by GHA" --body "Automerged by GitHub Action" --delete-branch --squash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
 
