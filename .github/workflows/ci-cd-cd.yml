@@ -54,7 +54,22 @@ jobs:
   # TODO: Squash and merge?
   # TODO: Delete feature branch (after successfull merge)
 
-      
+  # Create PR for this feature (if does not exist)
+  pr-merge-close: 
+    name: PR Merge Close
+    timeout-minutes: 10
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest    
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Merge PR
+        run: gh pr merge --auto --subject "Merge ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
 
   # Update issue with comment (that PR merged and branch deleted)
 
