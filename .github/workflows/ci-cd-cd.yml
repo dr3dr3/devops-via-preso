@@ -25,7 +25,7 @@ jobs:
 
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-        
+
       - name: New-Reopen-PR
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} -B main -H ${{ github.ref_name }}
         env:
@@ -53,6 +53,8 @@ jobs:
   # TODO: Branch protection settings = require approval. How do via GHA
   # TODO: Squash and merge?
   # TODO: Delete feature branch (after successfull merge)
+
+      
 
   # Update issue with comment (that PR merged and branch deleted)
 
