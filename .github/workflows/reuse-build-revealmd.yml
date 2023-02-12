@@ -98,8 +98,8 @@ jobs:
           echo "### Workflow Jobs Completed" >> $GITHUB_STEP_SUMMARY
           echo "Success is ${{steps.setoutput.outputs.SUCCESS}}" >> $GITHUB_STEP_SUMMARY
 
-  pr-check:
-    name: PR Check
+  build-check:
+    name: Build PR Check
     runs-on: ubuntu-latest
     if: always() # always run, so we never skip the check
     needs: [build, job-check]
