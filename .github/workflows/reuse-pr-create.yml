@@ -1,0 +1,46 @@
+# Create Pull Request 
+name: workflow-create-pr
+run-name: ${{ github.actor }} is creating pull request for feature ${{ github.head_ref }}
+
+on:
+  workflow_call:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  job-create-pr:
+    name: New-Update PR
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Check if PR exists
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          prs=$(gh pr list \
+              --repo "$GITHUB_REPOSITORY" \
+              --json baseRefName,headRefName \
+              --jq '
+                  map(select(.baseRefName == "main" and .headRefName == "$GITHUB_REF_NAME"))
+                  | length
+              ')
+          echo "Count of PRs: " $prs
+          if ((prs > 0)); then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: '!steps.check.outputs.skip'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: gh pr create -B main -H ${{ github.ref_name }} --title ${{ github.ref_name }} --body 'Created by Github action'       
+
+# If skip = true then reopen PR

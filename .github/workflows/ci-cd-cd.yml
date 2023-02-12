@@ -1,0 +1,112 @@
+# CI/CD/CD pipeline for new features
+name: cicdcd-new-feature
+run-name: CI-CD-CD pipeline for ${{ github.ref_name }}
+
+on:
+  # Runs on pushes targeting 'feature branches' (any branch that is NOT the default branch)
+  push:
+    branches-ignore: [$default-branch]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # Check feature (id#) has not been done before (in case local repo keeps using branch and then pushes)
+  # If already done... then??? Maybe append "part 2" as pattern... to PR and release etc
+
+  # Create PR for this feature (if does not exist)
+  pr-ci: 
+    name: PR-CI
+    timeout-minutes: 10
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest    
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: New-Reopen-PR
+        run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} -B main -H ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+
+  # Add data for metrics: "lead time to change" (first push to remote)
+
+  # Update issue with comment (that PR is created with link to it)
+
+  # Build static site using Reveal-MD
+  build-ci:
+    name: Build-CI
+    needs: [pr-ci]
+    uses: ./.github/workflows/reuse-build-revealmd.yml
+    with: 
+      branch-name: ${{ github.ref_name }}
+      deploy-stage: 'ci'
+  # (1) TODO: PR Checks for Build/Tests
+  # https://sagarsonwane230797.medium.com/automate-build-checks-and-slack-notification-with-github-actions-3b7eb702dae6
+  # https://josh-ops.com/posts/using-github-checks-api/
+
+  # If a check fails... can make further changes and update PR... then pass checks
+
+  # If checks all pass... approve and close PR, merge to Main
+  # TODO: Branch protection settings = require approval. How do via GHA
+  # TODO: Squash and merge?
+  # TODO: Delete feature branch (after successfull merge)
+
+  # Create PR for this feature (if does not exist)
+  pr-merge-close: 
+    name: PR Merge Close
+    needs: [build-ci]
+    timeout-minutes: 10
+    permissions: write-all
+    runs-on: ubuntu-latest    
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Merge PR
+        run: gh pr merge --auto --subject "Merge PR by GHA" --body "Automerged by GitHub Action" --delete-branch --squash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+
+  # Update issue with comment (that PR merged and branch deleted)
+
+  # Comment (keyword) on PR (so automatically closes issue)
+
+  # Tag and release (post merge to main)
+  # (2) TODO: Using PR merge commit SHA (Main branch) add tag using below (ensure doing annotated tag)
+  # https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-tag-an-old-Git-commit-id
+
+  # Add tag for next version
+  # add-tag:
+  #   name: Add Tag
+  #   uses: ./.github/workflows/reuse-tag-release.yml      
+
+  # (3) Dispatch to deploy to Stage
+  # TODO: Setup repo for this and workflow
+  # Stage repo workflow: 1) get build artifacts... 2) add stage config... 3) deploy to GHP... 4) do smoke testing
+  # Workflow above calls each point above, which is a workflow in this repo (reuse)
+  # Note: stage config shows that in stage (i.e. red background)
+  # Note: Stage should have all contents (i.e. canary indicator)... which can get deleted in canary delployment
+  
+  # If smoke tests fail: notify PR team and Dev team and exit this workflow
+  # PR team will delete that release in this repo
+  # Could automate: 1) delete release... 2) trigger rollback workflow that builds and deploys usng last working commit SHA
+
+  # Dev team notified via new issue with label
+  # Rollback workflow updates this issue
+
+  # Add data for metrics: "change failure rate" (this is a failure at stage... so log)
+  # Add data for metrics: "mean time to recovery" from failure to rollback deployed in Stage
+
+  # Dispatch to deploy to Canary
+  # TODO: Setup repo for this and workflow (same as Stage)
+  # Same smoke testing (aka PVT) and flow
+
+  # Add data for metrics: "deployment frequency" (deployed to Canary as measure)
+  # Add data for metrics: "lead time to change" (change in canary considered as change released to user)
+
+  # End this workflow: From first push of feature change... to integration... to delivery via PR... to deployment to canary (aka Prod)
+

@@ -1,7 +1,0 @@
-branches:
-- label: feature
-  prefix: feature/
-- label: fix
-  prefix: fix/
-- label: '*'
-  prefix: issues/

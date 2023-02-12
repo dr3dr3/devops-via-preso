@@ -11,7 +11,7 @@ on:
       deploy-stage:
         required: true
         type: string
-        # values: 'ci', 'stg', 'prd'
+        # values: 'ci', 'stg', 'prd' (do we need one for Canary?)
         default: 'ci'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -21,38 +21,96 @@ permissions:
 jobs:
   # Build static site using Reveal-MD
   build:
-    name: Build Reveal-MD 🔨
+    name: Build R-MD
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    #outputs:
+    #  result: ${{ steps.testing.outputs.TEST_RESULT }}
     steps:
+
       - name: Checkout 🛎️
         uses: actions/checkout@v3
       # Use actions/setup-node to enable caching
       # Node version on GitHub runner is v16.19
+
       - name: Setup Node.JS
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          # cache: npm
+          cache: npm
+
       - name: Clone Reveal-MD
         run: git clone https://github.com/webpro/reveal-md.git
-      - name: Copy markdown files to Reveal-MD
-        run: rsync -avh markdown reveal-md
+
       - name: Install Reveal-MD
         run: npm ci
+
+      #- name: Fail test
+      #  run: rsync slidify.spec.js reveal-md/test
+
+      # If this tests fail the NPM error will fail this job
       - name: Run tests from Reveal-MD
         run: npm run test
+
+      - name: GitHub Step Summary for Test
+        run: |
+          echo "### Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "$(npm run test)" >> $GITHUB_STEP_SUMMARY
+
+      #- name: Evaluate Test Results
+      #  run: |
+      #    if [[ "$(npm run test)" == *"failed"* ]]; then
+      #      echo "REVEAL-MD TEST FAILED"
+      #      exit 1
+      #    fi
+
       - name: Run Reveal-MD build
         run: npm run build
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.branch-name) }}
           path: reveal-md/_site
           retention-days: 2
+
       # Upload test artifacts: 
       # INPUT = CI... then 'CI-Testing-FeatureBranchName'
       # INPUT = STG... then 'STG-Testing-PR-ID'
       # These are used in PR as a Check: Status of testing, testing results summary (artifacts exists, and contents)
-      - name: Summary
-        run: echo "### Build complete! :thumbsup:" >> $GITHUB_STEP_SUMMARY
+
+  job-check:
+    name: Jobs Check
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: success() # only run when all shards have passed
+    # store success output flag for ci job
+    outputs:
+      success: ${{ steps.setoutput.outputs.SUCCESS }}
+    steps:
+
+      - name: Set Output
+        id: setoutput
+        run: echo "SUCCESS=true" >> $GITHUB_OUTPUT
+
+      - name: GitHub Step Summary for Job success
+        run: |
+          echo "### Workflow Jobs Completed" >> $GITHUB_STEP_SUMMARY
+          echo "Success is ${{steps.setoutput.outputs.SUCCESS}}" >> $GITHUB_STEP_SUMMARY
+
+  build-check:
+    name: Build PR Check
+    runs-on: ubuntu-latest
+    if: always() # always run, so we never skip the check
+    needs: [build, job-check]
+    steps:
+
+      - run: |
+          passed="${{ needs.job-check.outputs.success }}"
+          if [[ $passed == "true" ]]; then
+            echo "### Build success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          else
+            echo "### Build failed! :thumbsdown:" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
