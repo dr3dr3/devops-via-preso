@@ -17,9 +17,14 @@ jobs:
   # Create PR for this feature (if does not exist)
   pr-ci: 
     name: PR-CI
-    uses: ./.github/workflows/reuse-pr-create.yml
+    timeout-minutes: 10
+    runs-on: ubuntu-latest    
     permissions:
       pull-requests: write
+    steps:
+
+      - name: New-Reopen-PR
+        run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} -B main -H ${{ github.ref_name }}
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
