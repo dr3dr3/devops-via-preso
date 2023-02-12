@@ -55,17 +55,17 @@ jobs:
   # TODO: Delete feature branch (after successfull merge)
 
   # Create PR for this feature (if does not exist)
-  pr-merge-close: 
-    name: PR Merge Close
-    needs: [build-ci]
-    timeout-minutes: 10
-    # permissions:
-    #   pull-requests: write
-    runs-on: ubuntu-latest    
-    steps:
+  #pr-merge-close: 
+  #  name: PR Merge Close
+  #  needs: [build-ci]
+  #  timeout-minutes: 10
+  #  # permissions:
+  #  #   pull-requests: write
+  #  runs-on: ubuntu-latest    
+  #  steps:
 
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
+  #    - name: Checkout 🛎️
+  #      uses: actions/checkout@v3
 
     #  - name: Merge PR
     #    run: gh pr merge ${{ github.ref_name }} --auto --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
