@@ -67,10 +67,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Merge PR
-        run: gh pr merge ${{ github.ref_name }} --auto --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+    #  - name: Merge PR
+    #    run: gh pr merge ${{ github.ref_name }} --auto --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
+    #    env:
+    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
 
   # Update issue with comment (that PR merged and branch deleted)
 
