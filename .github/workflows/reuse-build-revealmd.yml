@@ -33,6 +33,8 @@ jobs:
       # Use actions/setup-node to enable caching
       # Node version on GitHub runner is v16.19
 
+      # Update branch
+
       - name: Setup Node.JS
         uses: actions/setup-node@v3
         with:
