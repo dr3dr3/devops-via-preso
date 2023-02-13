@@ -73,7 +73,10 @@ jobs:
       - name: Merge PR
         run: gh pr merge ${{ github.ref_name }} --auto --subject --delete-branch --rebase
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+
+      - name: GitHub Step Summary
+        run: echo "### PR Merge Success! :thumbsup:" >> $GITHUB_STEP_SUMMARY    
 
         # "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action"
 
