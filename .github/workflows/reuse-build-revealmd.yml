@@ -99,6 +99,7 @@ jobs:
         run: |
           echo "### Workflow Jobs Completed" >> $GITHUB_STEP_SUMMARY
           echo "Success is ${{steps.setoutput.outputs.SUCCESS}}" >> $GITHUB_STEP_SUMMARY
+          echo "Head commit message: ${{ github.event.head_commit.message }}" >> $GITHUB_STEP_SUMMARY
 
   build-check:
     name: Build PR Check
