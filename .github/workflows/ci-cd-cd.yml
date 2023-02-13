@@ -29,7 +29,18 @@ jobs:
       - name: New-Reopen-PR
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} 
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add labels to PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.pulls.addLabels({
+              pull_number: context.pull.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["fix"]
+            }) 
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
@@ -49,19 +60,12 @@ jobs:
 
   # If a check fails... can make further changes and update PR... then pass checks
 
-  # If checks all pass... approve and close PR, merge to Main
-  # TODO: Branch protection settings = require approval. How do via GHA
-  # TODO: Squash and merge?
-  # TODO: Delete feature branch (after successfull merge)
-
   # Merge PR if ready (note: by "[merge ci]" in message of final commit on feature branch)
   pr-merge-ci: 
     name: PR Merge CI
     needs: [build-ci]
     if: ${{ contains(github.event.head_commit.message, '[merge ci]') }}
     timeout-minutes: 10
-    # permissions:
-    #   pull-requests: write
     runs-on: ubuntu-latest    
     steps:
 
