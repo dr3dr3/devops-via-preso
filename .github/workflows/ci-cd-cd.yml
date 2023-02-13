@@ -48,7 +48,7 @@ jobs:
       - name: Get Labels from Issue
         id: setlabels
         run: |
-          labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$steps.setoutput.outputs.ISSUE_ID --jq '.labels.[].name')" || 0
+          labels="$(gh api repos/$OWNER/$REPO_NAME/issues/56 --jq '.labels.[].name')" || 0
           echo "$labels"
           echo "ISSUE_LABELS=$labels" >> $GITHUB_OUTPUT
 
