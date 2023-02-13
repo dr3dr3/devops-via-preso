@@ -42,15 +42,7 @@ jobs:
         shell: bash
 
       - name: Add label to PR
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: 57,
-              owner: $OWNER,
-              repo: $REPO_NAME,
-              labels: ["triage"]
-            }) 
+        run: gh issue 57 --add-label "style"
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
