@@ -71,14 +71,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Merge PR
-        run: gh pr merge ${{ github.ref_name }} --auto --subject --delete-branch --rebase
+        run: gh pr merge ${{ github.ref_name }} --rebase --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
 
       - name: GitHub Step Summary
         run: echo "### PR Merge Success! :thumbsup:" >> $GITHUB_STEP_SUMMARY    
-
-        # "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action"
 
   # Update issue with comment (that PR merged and branch deleted)
 
