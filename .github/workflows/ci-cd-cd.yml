@@ -33,8 +33,7 @@ jobs:
 
       - name: Get label from issue
         run: |
-          labels = "$(gh api repos/$OWNER/$REPO_NAME/pulls/56 --jq '.labels.[].name')"
-          echo "$labels"
+          gh api repos/$OWNER/$REPO_NAME/pulls/56 --jq '.labels.[].name'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
