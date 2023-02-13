@@ -26,8 +26,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      # Update branch so PR has latest changes
+
       - name: New-Reopen-PR
-        run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} -B main -H ${{ github.ref_name }}
+        run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
 
@@ -66,6 +68,8 @@ jobs:
 
   #    - name: Checkout 🛎️
   #      uses: actions/checkout@v3
+
+  # Update branch
 
     #  - name: Merge PR
     #    run: gh pr merge ${{ github.ref_name }} --auto --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
