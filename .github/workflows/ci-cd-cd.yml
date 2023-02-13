@@ -48,12 +48,12 @@ jobs:
       - name: Get Labels from Issue
         id: setlabels
         run: |
-          labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$ISSUE_ID --jq '.labels.[].name')" || "none"
+          labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$ISSUE_ID --jq '.labels.[].name')" || 0
           echo "$labels"
           echo "ISSUE_LABELS=$labels" >> $GITHUB_OUTPUT
 
       - name: Add Label to PR
-        if: ${{ steps.setlabels.outputs.ISSUE_LABELS != "none" }}
+        if: ${{ steps.setlabels.outputs.ISSUE_LABELS != 0 }}
         run: gh issue edit ${{steps.setoutput.outputs.PR_ID}} --add-label "${{ steps.setoutput.outputs.ISSUE_LABELS }}"
 
   # Add data for metrics: "lead time to change" (first push to remote)
