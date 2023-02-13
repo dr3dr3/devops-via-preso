@@ -26,8 +26,6 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      # Update branch so PR has latest changes
-
       - name: New-Reopen-PR
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} 
         env:
