@@ -42,7 +42,7 @@ jobs:
         shell: bash
 
       - name: Add label to PR
-        run: gh issue 57 --add-label "style"
+        run: gh issue edit 57 --add-label "style"
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
