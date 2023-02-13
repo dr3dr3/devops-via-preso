@@ -60,7 +60,7 @@ jobs:
   pr-merge-ci: 
     name: PR Merge CI
     needs: [build-ci]
-    if: ${{ !contains(github.event.head_commit.message, 'mergeci') }}
+    if: ${{ contains(github.event.head_commit.message, 'mergeci') }}
     timeout-minutes: 10
     # permissions:
     #   pull-requests: write
