@@ -33,7 +33,7 @@ jobs:
 
       - name: Get label from issue
         run: |
-          issue_id="($BRANCH | sed 's/[^0-9]*//g')"
+          issue_id="$($BRANCH | sed 's/[^0-9]*//g')"
           labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$issue_id --jq '.labels.[].name')" || "none"
           echo "$labels"
         shell: bash
