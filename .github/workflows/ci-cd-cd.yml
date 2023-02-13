@@ -32,7 +32,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get label from issue
-        run: gh api repos/$OWNER/$REPO_NAME/pulls/57 --jq '.labels.[].name'
+        run: |
+          labels = "$(gh api repos/$OWNER/$REPO_NAME/issues/56 --jq '.labels.[].name')"
+          echo "$labels"
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
