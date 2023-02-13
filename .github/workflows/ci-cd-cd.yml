@@ -33,6 +33,7 @@ jobs:
 
       - name: Get label from issue
         run: |
+          sudo apt-get install sed
           issue_id = "${{ github.ref_name }}" | sed 's/[^0-9]*//g'
           pr_id = $((issue_id)) + 1
           labels = "$(gh api repos/$OWNER/$REPO_NAME/pulls/$pr_id --jq '.labels.[].name')"
