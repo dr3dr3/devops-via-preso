@@ -107,12 +107,13 @@ jobs:
     needs: [build, job-check]
     steps:
 
-      - run: |
+      - name: GitHub Step Summary
+        run: |
           passed="${{ needs.job-check.outputs.success }}"
           if [[ $passed == "true" ]]; then
-            echo "### Build success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
+            echo "### Build Success! :thumbsup:" >> $GITHUB_STEP_SUMMARY
             exit 0
           else
-            echo "### Build failed! :thumbsdown:" >> $GITHUB_STEP_SUMMARY
+            echo "### Build Failed! :thumbsdown:" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
