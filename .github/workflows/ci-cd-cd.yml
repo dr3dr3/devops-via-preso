@@ -56,11 +56,11 @@ jobs:
   # TODO: Squash and merge?
   # TODO: Delete feature branch (after successfull merge)
 
-  # Create PR for this feature (if does not exist)
+  # Merge PR if ready (note: by "[merge ci]" in message of final commit on feature branch)
   pr-merge-ci: 
     name: PR Merge CI
     needs: [build-ci]
-    if: ${{ contains(github.event.head_commit.message, 'mergeci') }}
+    if: ${{ contains(github.event.head_commit.message, '[merge ci]') }}
     timeout-minutes: 10
     # permissions:
     #   pull-requests: write
