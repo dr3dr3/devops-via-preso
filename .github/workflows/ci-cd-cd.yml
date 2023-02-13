@@ -52,7 +52,7 @@ jobs:
           echo "ISSUE_LABELS=$labels" >> $GITHUB_OUTPUT
 
       - name: Add Label to PR
-        if: steps.setoutput.outputs.ISSUE_LABELS != "none"
+        if: ${{ steps.setoutput.outputs.ISSUE_LABELS != "none" }}
         run: gh issue edit ${{steps.setoutput.outputs.PR_ID}} --add-label "${{ steps.setoutput.outputs.ISSUE_LABELS }}"
 
   # Add data for metrics: "lead time to change" (first push to remote)
