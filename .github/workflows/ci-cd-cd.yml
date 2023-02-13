@@ -25,7 +25,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       OWNER: ${{ github.repository_owner }}
       REPO_NAME: ${{ github.event.repository.name }}
-      BRANCH: ${{ github.ref_name }}     
+      BRANCH: ${{ github.ref_name }}
+    outputs:
+      issue-id: ${{ steps.setoutput.outputs.ISSUE_ID }}
+      pr-id: ${{ steps.setoutput.outputs.PR_ID }}      
     steps:
 
       - name: Checkout 🛎️
@@ -34,15 +37,23 @@ jobs:
       - name: New-Reopen-PR
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -b "Created by Github action" -t ${{ github.ref_name }} 
 
-      - name: Get label from issue
+      - name: Get Issue + PR Number
+        id: setoutput
         run: |
-          issue_id="$(echo $BRANCH | sed 's/[^0-9]*//g')"
-          labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$issue_id --jq '.labels.[].name')" || "none"
-          echo "$labels"
-        shell: bash
+          issue_num="$(echo $BRANCH | sed 's/[^0-9]*//g')"
+          echo "ISSUE_ID=$issue_num" >> $GITHUB_OUTPUT
+          pr_num=$((issue_num))+1
+          echo "PR_ID=$pr_num" >> $GITHUB_OUTPUT
 
-      - name: Add label to PR
-        run: gh issue edit 57 --add-label "style"
+      - name: Get Labels from Issue
+        run: |
+          labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$ISSUE_ID --jq '.labels.[].name')" || "none"
+          echo "$labels"
+          echo "ISSUE_LABELS=$labels" >> $GITHUB_OUTPUT
+
+      - name: Add Label to PR
+        if: steps.setoutput.outputs.ISSUE_LABELS != "none"
+        run: gh issue edit ${{steps.setoutput.outputs.PR_ID}} --add-label "${{ steps.setoutput.outputs.ISSUE_LABELS }}"
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
