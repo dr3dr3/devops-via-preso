@@ -41,18 +41,16 @@ jobs:
           echo "$labels"
         shell: bash
 
-
-
-#      - name: Add label to PR
-#        uses: actions/github-script@v6
-#        with:
-#          script: |
-#            github.rest.issues.addLabels({
-#              issue_number: context.issue.number,
-#              owner: github.repository_owner,
-#              repo: github.repository,
-#              labels: ["triage"]
-#            }) 
+      - name: Add label to PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: 57,
+              owner: $OWNER,
+              repo: $REPO_NAME,
+              labels: ["triage"]
+            }) 
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
