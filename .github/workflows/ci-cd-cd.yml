@@ -16,7 +16,7 @@ jobs:
 
   # Create PR for this feature (if does not exist)
   pr-ci: 
-    name: PR-CI
+    name: PR Open-Reopen
     timeout-minutes: 10
     permissions:
       pull-requests: write
@@ -57,24 +57,25 @@ jobs:
   # TODO: Delete feature branch (after successfull merge)
 
   # Create PR for this feature (if does not exist)
-  #pr-merge-close: 
-  #  name: PR Merge Close
-  #  needs: [build-ci]
-  #  timeout-minutes: 10
-  #  # permissions:
-  #  #   pull-requests: write
-  #  runs-on: ubuntu-latest    
-  #  steps:
+  pr-merge-ci: 
+    name: PR Merge CI
+    needs: [build-ci]
+    if: "!contains(github.event.head_commit.message, '(Merge-CI)')"
+    timeout-minutes: 10
+    # permissions:
+    #   pull-requests: write
+    runs-on: ubuntu-latest    
+    steps:
 
-  #    - name: Checkout 🛎️
-  #      uses: actions/checkout@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
 
-  # Update branch
+      - name: Merge PR
+        run: gh pr merge ${{ github.ref_name }} --auto --subject --delete-branch --rebase
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
 
-    #  - name: Merge PR
-    #    run: gh pr merge ${{ github.ref_name }} --auto --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action" --delete-branch --squash
-    #    env:
-    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+        # "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action"
 
   # Update issue with comment (that PR merged and branch deleted)
 
