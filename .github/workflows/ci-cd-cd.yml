@@ -71,7 +71,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Merge PR
-        run: gh pr merge ${{ github.ref_name }} --auto --delete-branch --rebase --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action"
+        run: gh pr merge ${{ github.ref_name }} --rebase --subject "Merge PR to trunk for branch ${{ github.ref_name }}" --body "Automerged by GitHub Action"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
 
