@@ -1,6 +1,6 @@
-# CI/CD/CD pipeline for new features
-name: cicdcd-new-feature
-run-name: CI-CD-CD pipeline for ${{ github.ref_name }}
+# Continuous Integration
+name: ci-new-feature
+run-name: CI pipeline for ${{ github.ref_name }}
 
 on:
   # Runs on pushes targeting 'feature branches' (any branch that is NOT the default branch)
