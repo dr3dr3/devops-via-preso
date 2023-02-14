@@ -1,0 +1,18 @@
+# Continuous Integration
+name: continuous-delivery
+run-name: CD pipeline to deploy to Stage and Canary
+
+on:
+  # Runs on pushes targeting 'feature branches' (any branch that is NOT the default branch)
+  push:
+    branches: [$default-branch]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  tag-release:
+    name: Tag and Release
+    uses: ./.github/workflows/reuse-tag-release.yml
+
