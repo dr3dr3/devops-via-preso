@@ -20,6 +20,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       pull-requests: write
+      issues: write
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
