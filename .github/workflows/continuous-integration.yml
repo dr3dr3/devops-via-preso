@@ -110,16 +110,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-  # Tag and release (post merge to main)
-  # (2) TODO: Using PR merge commit SHA (Main branch) add tag using below (ensure doing annotated tag)
-  # https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-tag-an-old-Git-commit-id
-
-  # Add tag for next version
-  # add-tag:
-  #   name: Add Tag
-  #   uses: ./.github/workflows/reuse-tag-release.yml      
-
   # (3) Dispatch to deploy to Stage
   # TODO: Setup repo for this and workflow
   # Stage repo workflow: 1) get build artifacts... 2) add stage config... 3) deploy to GHP... 4) do smoke testing
