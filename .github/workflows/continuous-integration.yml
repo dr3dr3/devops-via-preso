@@ -100,14 +100,16 @@ jobs:
       - name: Merge PR
         run: gh pr merge ${{ github.ref_name }} --squash --subject "${{ github.ref_name }} ${{ needs.pr-ci.outputs.semver-type }}" --body "Automerged by GitHub Action"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: GitHub Step Summary
         run: echo "### PR Merge Success! :thumbsup:" >> $GITHUB_STEP_SUMMARY    
 
-  # Update issue with comment (that PR merged and branch deleted)
+      - name: Add Comment to Issue
+        run: gh issue comment ${{ needs.pr-ci.outputs.issue_id }} --body "Pull request merged"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Comment (keyword) on PR (so automatically closes issue)
 
   # Tag and release (post merge to main)
   # (2) TODO: Using PR merge commit SHA (Main branch) add tag using below (ensure doing annotated tag)
