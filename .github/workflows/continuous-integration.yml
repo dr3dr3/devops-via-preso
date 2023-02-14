@@ -107,7 +107,7 @@ jobs:
         run: echo "### PR Merge Success! :thumbsup:" >> $GITHUB_STEP_SUMMARY    
 
       - name: Add Comment to Issue
-        run: gh issue comment ${{ needs.pr-ci.outputs.issue-id }} --body "Pull request merged"
+        run: gh issue comment ${{ needs.pr-ci.outputs.issue-id }} --body "### 📣 Pull request ${{ needs.pr-ci.outputs.pr-id }} merged"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
