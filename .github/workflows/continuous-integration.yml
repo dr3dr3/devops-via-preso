@@ -1,5 +1,5 @@
 # Continuous Integration
-name: ci-new-feature
+name: continuous-integration
 run-name: CI pipeline for ${{ github.ref_name }}
 
 on:
@@ -106,7 +106,7 @@ jobs:
         run: echo "### PR Merge Success! :thumbsup:" >> $GITHUB_STEP_SUMMARY    
 
       - name: Add Comment to Issue
-        run: gh issue comment ${{ needs.pr-ci.outputs.issue_id }} --body "Pull request merged"
+        run: gh issue comment ${{ needs.pr-ci.outputs.issue-id }} --body "Pull request merged"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
