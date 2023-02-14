@@ -50,8 +50,9 @@ jobs:
         run: echo "{version-match}={false}" >> $GITHUB_OUTPUT
 
       - name: Tag and Release
-        run: gh release create ${{ steps.next-version.outputs.version_tag }} --draft --generate-notes --latest
-
+        run: gh release create ${{ steps.next-version.outputs.version-tag }} --draft --generate-notes --latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Create tag
 #        uses: actions/github-script@v6
