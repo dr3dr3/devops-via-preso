@@ -16,5 +16,7 @@ jobs:
 
   tag-release:
     name: Tag and Release
+    permissions:
+      contents: write
     uses: ./.github/workflows/reuse-tag-release.yml
 
