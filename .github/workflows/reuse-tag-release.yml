@@ -23,6 +23,7 @@ jobs:
       - name: Get Next Tag Version
         id: next-version
         uses: paulhatch/semantic-version@v5.0.3
+        # https://github.com/PaulHatch/semantic-version
         with:
           tag_prefix: 'v'
           version_format: '${major}.${minor}.${patch}'
@@ -31,6 +32,7 @@ jobs:
       - name: Get NPM Package Version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.2.3
+        # https://github.com/martinbeentjes/npm-get-version-action
       - name: Display Package Version
         run: echo "${{ steps.package-version.outputs.current-version }}"
       - name: Versions Match
