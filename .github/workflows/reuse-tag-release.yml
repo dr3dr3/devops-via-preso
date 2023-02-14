@@ -15,6 +15,8 @@ jobs:
     name: SemVer Tag
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    permissions:
+      repository-projects: write
     steps:
 
       - name: Checkout 🛎️
@@ -38,30 +40,22 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@v1.2.3
         # https://github.com/martinbeentjes/npm-get-version-action
 
-      - name: Display Package Version
-        run: echo "${{ steps.package-version.outputs.current-version }}"
-
-      - name: Versions Match
-        if: ${{ steps.next-version.outputs.version_tag == format('{0}{1}', 'v', steps.package-version.outputs.current-version) }}
-        run: echo "{version-match}={true}" >> $GITHUB_OUTPUT
-
       - name: Versions Do Not Match
+        id: version-check
         if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}', 'v', steps.package-version.outputs.current-version) }}
-        run: echo "{version-match}={false}" >> $GITHUB_OUTPUT
+        run: |
+          echo "SemVer Tag: ${{ steps.next-version.outputs.version_tag }}"
+          echo "NPM Package Version: ${{ steps.package-version.outputs.current-version }}"
+          exit 1
 
-      - name: Tag and Release
-        run: gh release create ${{ steps.next-version.outputs.version-tag }} --draft --generate-notes --latest
+      - name: Create Card in Project
+        if: ${{ failure() && steps.version-check.conclusion == "failure" }}
+        run: gh issue create --project "@dr3dr3's DevOps Demo" --title "Package ${{ steps.package-version.outputs.current-version }} vs SemVer ${{ steps.next-version.outputs.version_tag }}" --body "Please update Package.JSON on next feature" --label "error-tagging"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Create tag
-#        uses: actions/github-script@v6
-#        with:
-#          script: |
-#            github.rest.git.createRef({
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              ref: 'refs/tags/<tagname>',
-#              sha: context.sha
-#            })
-      
+      - name: Tag and Release
+        run: gh release create ${{ steps.next-version.outputs.version_tag }} --draft --generate-notes --latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
