@@ -1,0 +1,11 @@
+automate:
+- .github/**/*
+
+contents:
+- markdown/**/*
+
+documentation:
+- Readme.md
+
+style:
+- template.html
