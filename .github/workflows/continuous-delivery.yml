@@ -3,9 +3,11 @@ name: continuous-delivery
 run-name: CD pipeline to deploy to Stage and Canary
 
 on:
-  # Runs on pushes targeting 'feature branches' (any branch that is NOT the default branch)
-  push:
-    branches: [$default-branch]
+  # Runs on when continuous integration workflow completes
+  workflow_run:
+    workflows: [continuous-integration]
+    types:
+      - completed
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
