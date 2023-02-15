@@ -92,6 +92,7 @@ jobs:
       - name: Update Package.json
         run: |
           echo "SemVer is ${{ needs.get-tag.outputs.semver }}"
+          cho "NPM Tag is ${{ needs.get-tag.outputs.npm-tag }}"
           git config user.name github-actions
           git config user.email github-actions@github.com
           npm version ${{ needs.get-tag.outputs.semver }}
