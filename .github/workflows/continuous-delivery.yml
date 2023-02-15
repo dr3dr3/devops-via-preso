@@ -2,11 +2,7 @@
 name: continuous-delivery
 run-name: CD pipeline to deploy to Stage and Canary
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: workflow_dispatch
 
 jobs:
   tag-release:

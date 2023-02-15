@@ -59,12 +59,12 @@ jobs:
 
       # TODO: Add the other label types
 
-      - name: SemVer Type From Label
+      - name: Major Version From Label
         # Used in PR merge commit message for tag+release workflow
         if: ${{ contains(steps.setoutput.outputs.LABELS, 'major-version') }}
         run: echo "SEMVER='(MAJOR)'" >> $GITHUB_OUTPUT
 
-      - name: SemVer Type From Label
+      - name: Minor Version From Label
         # Used in PR merge commit message for tag+release workflow
         if: ${{ contains(steps.setoutput.outputs.LABELS, 'minor-version') }}
         run: echo "SEMVER='(MINOR)'" >> $GITHUB_OUTPUT
@@ -111,6 +111,14 @@ jobs:
         run: gh issue comment ${{ needs.pr-ci.outputs.issue-id }} --body "### 📣 Pull request ${{ needs.pr-ci.outputs.pr-id }} merged"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  tag-release:
+    name: Tag and Release
+    needs: [pr-merge-ci]
+    permissions:
+      contents: write
+      issues: write
+    uses: ./.github/workflows/reuse-tag-release.yml
 
   # (3) Dispatch to deploy to Stage
   # TODO: Setup repo for this and workflow
