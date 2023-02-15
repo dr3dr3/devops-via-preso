@@ -46,7 +46,8 @@ jobs:
           echo "ISSUE_ID=$issue_num" >> $GITHUB_OUTPUT
           pr_num=$((issue_num + 1))
           echo "PR_ID=$pr_num" >> $GITHUB_OUTPUT
-          issue_labels="$(gh api repos/$OWNER/$REPO_NAME/issues/$issue_num --jq '.labels.[].name')" || "none"
+          labels_response="$(gh api repos/$OWNER/$REPO_NAME/issues/$issue_num --jq '.labels.[].name')" || "none"
+          issue_labels=$(echo $labels_response | sed -z 's/\n/,/g;s/,$/\n/')
           echo "$issue_labels"
           echo "LABELS=$issue_labels" >> $GITHUB_OUTPUT
           echo "SEMVER='(PATCH)'" >> $GITHUB_OUTPUT
