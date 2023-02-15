@@ -81,7 +81,7 @@ jobs:
   update-package-version:
     name: Update Package version
     needs: [get-tag]
-    if: ${{ needs.get-tag.outputs.semver != needs.get-tag.outputs.npm-tag) }}
+    if: ${{ needs.get-tag.outputs.semver != needs.get-tag.outputs.npm-tag }}
     timeout-minutes: 10
     runs-on: ubuntu-latest  
     steps:
