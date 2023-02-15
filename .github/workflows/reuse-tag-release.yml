@@ -23,6 +23,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Get Next Tag Version
@@ -47,16 +48,15 @@ jobs:
         run: |
           echo "SemVer Tag: ${{ steps.next-version.outputs.version_tag }}"
           echo "NPM Package Version: ${{ steps.package-version.outputs.current-version }}"
-          exit 1
 
-      - name: Create Card in Project
-        if: ${{ failure() && steps.version-check.conclusion == 'failure' }}
-        run: gh issue create --title "Package ${{ steps.package-version.outputs.current-version }} vs SemVer ${{ steps.next-version.outputs.version_tag }}" --body "Please update Package.JSON on next feature" --label "error-tagging"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Create Card in Project
+#        if: ${{ failure() && steps.version-check.conclusion == 'failure' }}
+#        run: gh issue create --title "Package ${{ steps.package-version.outputs.current-version }} vs SemVer ${{ steps.next-version.outputs.version_tag }}" --body "Please update Package.JSON on next feature" --label "error-tagging"
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Tag and Release
-        run: gh release create ${{ steps.next-version.outputs.version_tag }} --generate-notes --latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Tag and Release
+#        run: gh release create ${{ steps.next-version.outputs.version_tag }} --generate-notes --latest
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
  
