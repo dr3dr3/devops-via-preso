@@ -35,6 +35,7 @@ jobs:
         uses: paulhatch/semantic-version@v5.0.3
         # https://github.com/PaulHatch/semantic-version
         with:
+          tag_prefix: ''
           version_format: '${major}.${minor}.${patch}'
 
       - name: Get NPM Package Version
@@ -45,17 +46,16 @@ jobs:
       - name: Set outputs
         id: setoutput
         run: | 
-          echo "${{ steps.next-version.outputs.version_tag }}"
+          echo "SemVer is ${{ steps.next-version.outputs.version_tag }}"
           echo "SEMVER=$steps.next-version.outputs.version_tag" >> $GITHUB_OUTPUT
-          echo "${{ steps.package-version.outputs.current-version }}"
+          echo "Package Version is ${{ steps.package-version.outputs.current-version }}"
           echo "NPM_TAG=$steps.package-version.outputs.current-version" >> $GITHUB_OUTPUT
 
-#      - name: Versions Do Not Match
-#        id: version-check
-#        if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}', 'v', steps.package-version.outputs.current-version) }}
-#        run: |
-#          echo "SemVer Tag: ${{ steps.next-version.outputs.version_tag }}"
-#          echo "NPM Package Version: ${{ steps.package-version.outputs.current-version }}"
-
-
- 
+  test-tag:
+    name: Testing
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Testing it
+        run: | 
+          echo "Jobs version output: ${{ jobs.semver-tag.outputs.semver }}"

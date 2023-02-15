@@ -91,7 +91,7 @@ jobs:
 
       - name: Update Package.json
         run: |
-          echo "Version: ${{ needs.get-tag.outputs.semver }}"
+          echo "SemVer is ${{ needs.get-tag.outputs.semver }}"
           git config user.name github-actions
           git config user.email github-actions@github.com
           npm version ${{ needs.get-tag.outputs.semver }}
@@ -155,7 +155,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tag and Release
-        run: gh release create ${{ steps.next-version.outputs.version_tag }} --generate-notes --latest
+        run: gh release create ${{ format('{0}{1}', 'v', steps.next-version.outputs.version_tag) }} --generate-notes --latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
