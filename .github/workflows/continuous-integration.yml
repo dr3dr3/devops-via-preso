@@ -7,12 +7,10 @@ on:
   push:
     branches-ignore: [main]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 jobs:
   # Check feature (id#) has not been done before (in case local repo keeps using branch and then pushes)
   # If already done... then??? Maybe append "part 2" as pattern... to PR and release etc
+
 
   # Create PR for this feature (if does not exist)
   pr-ci: 
@@ -69,6 +67,37 @@ jobs:
         if: ${{ contains(steps.setoutput.outputs.LABELS, 'minor-version') }}
         run: echo "SEMVER='(MINOR)'" >> $GITHUB_OUTPUT
 
+  # Determine SemVer Tag and compare to version in Package.json
+  get-tag:
+    name: Tag and Release
+    needs: [pr-ci]
+    if: ${{ contains(github.event.head_commit.message, '[merge ci]') }}
+    permissions:
+      contents: write
+      issues: write
+    uses: ./.github/workflows/reuse-tag-release.yml
+
+  # If Package.json is not correct... then update it
+  update-package-version:
+    name: Update Package version
+    needs: [get-tag]
+    if: ${{ needs.get-tag.outputs.semver != needs.get-tag.outputs.npm-tag) }}
+    timeout-minutes: 10
+    runs-on: ubuntu-latest  
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Update Package.json
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          npm version ${{ needs.get-tag.outputs.semver }}
+          git add .
+          git commit -m "package.json version updated to ${{ needs.get-tag.outputs.semver }}"
+          git push
+
   # Add data for metrics: "lead time to change" (first push to remote)
 
   # Update issue with comment (that PR is created with link to it)
@@ -85,12 +114,24 @@ jobs:
   # https://sagarsonwane230797.medium.com/automate-build-checks-and-slack-notification-with-github-actions-3b7eb702dae6
   # https://josh-ops.com/posts/using-github-checks-api/
 
-  # If a check fails... can make further changes and update PR... then pass checks
+  merge-ready:
+    name: Merge Ready - Feature Branch to Truck
+    needs: [get-tag, update-package-version, build-ci]
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
+    timeout-minutes: 10
+    runs-on: ubuntu-latest 
+    steps:
+
+      - name: Ready message
+        run: echo "### Merge Ready :thumbsup:" >> $GITHUB_STEP_SUMMARY   
 
   # Merge PR if ready (note: by "[merge ci]" in message of final commit on feature branch)
   pr-merge-ci: 
     name: PR Merge CI
-    needs: [pr-ci, build-ci]
+    needs: [merge-ready]
     if: ${{ contains(github.event.head_commit.message, '[merge ci]') }}
     timeout-minutes: 10
     runs-on: ubuntu-latest    
@@ -112,13 +153,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  tag-release:
-    name: Tag and Release
-    needs: [pr-merge-ci]
-    permissions:
-      contents: write
-      issues: write
-    uses: ./.github/workflows/reuse-tag-release.yml
+      - name: Tag and Release
+        run: gh release create ${{ steps.next-version.outputs.version_tag }} --generate-notes --latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # (3) Dispatch to deploy to Stage
   # TODO: Setup repo for this and workflow
