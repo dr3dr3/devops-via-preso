@@ -3,17 +3,15 @@ name: continuous-delivery
 run-name: CD pipeline to deploy to Stage and Canary
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    #branches: [$default-branch]
-    types: [closed]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   tag-release:
     name: Tag and Release
-    if: ${{ github.event.pull_request.merged }}
+    if: ${{ github.ref == 'refs/head/main' }}
     permissions:
       contents: write
       issues: write

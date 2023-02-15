@@ -5,7 +5,7 @@ run-name: CI pipeline for ${{ github.ref_name }}
 on:
   # Runs on pushes targeting 'feature branches' (any branch that is NOT the default branch)
   push:
-    branches-ignore: [$default-branch]
+    branches-ignore: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
