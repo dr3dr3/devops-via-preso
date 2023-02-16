@@ -101,6 +101,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 5
+          token: ${{ secrets.TAG_MAIN }}
 
       - name: Add Git Tag
         run: | 
