@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest    
     steps:
 
-      - name: Checkout 🛎️
+      - name: Checkout Feature Branch
         uses: actions/checkout@v3
 
       - name: Merge PR
@@ -137,7 +137,7 @@ jobs:
       package-version: ${{ steps.setoutput.outputs.NPM_TAG }}   
     steps:
 
-      - name: Checkout 🛎️
+      - name: Checkout Main Branch
         uses: actions/checkout@v3
         with:
           ref: main
@@ -160,9 +160,9 @@ jobs:
         id: setoutput
         run: | 
           echo "SemVer is ${{ steps.next-version.outputs.version_tag }}"
-          echo "SEMVER=$steps.next-version.outputs.version_tag" >> $GITHUB_OUTPUT
+          echo "SEMVER=${{steps.next-version.outputs.version_tag}}" >> $GITHUB_OUTPUT
           echo "Package Version is ${{ steps.package-version.outputs.current-version }}"
-          echo "NPM_TAG=$steps.package-version.outputs.current-version" >> $GITHUB_OUTPUT    
+          echo "NPM_TAG=${{steps.package-version.outputs.current-version}}" >> $GITHUB_OUTPUT    
 
 
   # If Package.json is not correct... then update it
