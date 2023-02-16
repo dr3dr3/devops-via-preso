@@ -1,5 +1,5 @@
 # Continuous Delivery Workflow
-name: stg-caller-workflow
+name: stg-deploy
 run-name: Continuous delivery triggered by ${{ github.event_name }}
 
 on:
