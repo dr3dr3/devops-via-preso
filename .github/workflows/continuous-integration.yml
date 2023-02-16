@@ -92,6 +92,8 @@ jobs:
     needs: [pr-merge-ci]
     timeout-minutes: 10
     runs-on: ubuntu-latest  
+    permissions:
+      contents: write
     steps:
 
       - name: Checkout Feature Branch
