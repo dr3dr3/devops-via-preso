@@ -140,7 +140,7 @@ jobs:
       - name: Checkout Main Branch
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: 'main'
           fetch-depth: 0
 
       - name: Get Next Tag Version
@@ -174,10 +174,10 @@ jobs:
     runs-on: ubuntu-latest  
     steps:
 
-      - name: Checkout 🛎️
+      - name: Checkout Main Branch
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: 'main'
 
       - name: Update Package.json
         run: |
