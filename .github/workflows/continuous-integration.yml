@@ -89,7 +89,7 @@ jobs:
   # Create release using GitHub CLI (auto adds tag to commit and generates release notes)
   create-release-and-tag:
     name: Create Release and Tag Commit
-    needs: [pc-ci, pr-merge-ci]
+    needs: [pr-ci, pr-merge-ci]
     timeout-minutes: 10
     runs-on: ubuntu-latest  
     permissions:
