@@ -93,6 +93,12 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest  
     steps:
+
+      - name: Checkout Feature Branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
       - name: Create Release and Tag Commit via GitHub CLI
         run: gh release create ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }} --generate-notes --latest
         env:
