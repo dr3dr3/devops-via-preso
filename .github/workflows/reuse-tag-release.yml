@@ -4,20 +4,24 @@ run-name: Tag and Release 🚀
 
 on:
   workflow_call:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-# permissions:
-#  contents: read
+    outputs:
+      semver:
+        description: "Next semantic version"
+        value: ${{ jobs.semver-tag.outputs.semver }}
+      npm-tag:
+        description: "Version from pacakge.json (NPM)"
+        value: ${{ jobs.semver-tag.outputs.npm-tag }}
 
 jobs:
-
   semver-tag:
     name: SemVer Tag
     timeout-minutes: 10
     runs-on: ubuntu-latest
     permissions:
-      issues: write
       contents: write
+    outputs:
+      semver: ${{ steps.setoutput.outputs.SEMVER }}   
+      npm-tag: ${{ steps.setoutput.outputs.NPM_TAG }}   
     steps:
 
       - name: Checkout 🛎️
@@ -31,32 +35,18 @@ jobs:
         uses: paulhatch/semantic-version@v5.0.3
         # https://github.com/PaulHatch/semantic-version
         with:
-          tag_prefix: 'v'
+          tag_prefix: ''
           version_format: '${major}.${minor}.${patch}'
-
-      - name: Display SemVer
-        run: echo "${{ steps.next-version.outputs.version_tag }}"
 
       - name: Get NPM Package Version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.2.3
         # https://github.com/martinbeentjes/npm-get-version-action
 
-      - name: Versions Do Not Match
-        id: version-check
-        if: ${{ steps.next-version.outputs.version_tag != format('{0}{1}', 'v', steps.package-version.outputs.current-version) }}
-        run: |
-          echo "SemVer Tag: ${{ steps.next-version.outputs.version_tag }}"
-          echo "NPM Package Version: ${{ steps.package-version.outputs.current-version }}"
-
-#      - name: Create Card in Project
-#        if: ${{ failure() && steps.version-check.conclusion == 'failure' }}
-#        run: gh issue create --title "Package ${{ steps.package-version.outputs.current-version }} vs SemVer ${{ steps.next-version.outputs.version_tag }}" --body "Please update Package.JSON on next feature" --label "error-tagging"
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#      - name: Tag and Release
-#        run: gh release create ${{ steps.next-version.outputs.version_tag }} --generate-notes --latest
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- 
+      - name: Set outputs
+        id: setoutput
+        run: | 
+          echo "SemVer is ${{ steps.next-version.outputs.version_tag }}"
+          echo "SEMVER=$steps.next-version.outputs.version_tag" >> $GITHUB_OUTPUT
+          echo "Package Version is ${{ steps.package-version.outputs.current-version }}"
+          echo "NPM_TAG=$steps.package-version.outputs.current-version" >> $GITHUB_OUTPUT
