@@ -89,7 +89,7 @@ jobs:
   # Create release using GitHub CLI (auto adds tag to commit and generates release notes)
   create-release-and-tag:
     name: Create Release and Tag Commit
-    needs: [pr-merge-ci]
+    needs: [pr-ci, pr-merge-ci]
     timeout-minutes: 10
     runs-on: ubuntu-latest  
     permissions:
@@ -100,8 +100,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
+          fetch-depth: 5
 
-      - name: Create Release and Tag Commit via GitHub CLI
+      - name: Add Git Tag
+        run: | 
+          echo "Git tag is ${{ needs.pr-ci.outputs.package-version}}"
+          git tag -a ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }} -m 'Release version ${{ needs.pr-ci.outputs.package-version }}'
+          git push origin ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
+
+      - name: Create Release 
         run: gh release create ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }} --generate-notes --latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
