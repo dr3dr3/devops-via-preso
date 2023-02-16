@@ -21,7 +21,10 @@ jobs:
       issues: write
     runs-on: ubuntu-latest
     outputs:
-      package-version: ${{ steps.setoutput.outputs.NPM_TAG }}        
+      package-version: ${{ steps.setoutput.outputs.NPM_TAG }}    
+    env:
+      GH_TOKEN: ${{ github.token }}
+
     steps:
 
       - name: Checkout 🛎️
