@@ -28,11 +28,19 @@ jobs:
     #  result: ${{ steps.testing.outputs.TEST_RESULT }}
     steps:
 
+      - name: Checkout CI 🛎️
+        if: ${{ inputs.deploy-stage == 'ci' }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{inputs.target-ref}}
+
       - name: Checkout 🛎️
+        if: ${{ inputs.deploy-stage != 'ci' }}
         uses: actions/checkout@v3
         with:
           repository: 'dr3dr3/devops-via-preso'
           ref: ${{inputs.target-ref}}
+          token: ${{ secrets.TAG_MAIN }}
 
       - name: Setup Node.JS
         uses: actions/setup-node@v3
