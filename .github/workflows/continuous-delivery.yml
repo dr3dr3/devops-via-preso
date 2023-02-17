@@ -20,8 +20,4 @@ jobs:
 
       - name: Send Dispatch 
         run: |
-          curl -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${GITHUB_TOKEN}" \
-          --request POST \
-          --data '{"event_type": "deploy-stage", "client_payload: {"paused": false}"}' \
-          https://api.github.com/repos/${OWNER}/${REPO}/dispatches
+          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GITHUB_TOKEN}" --request POST --data '{"event_type": "deploy-stage", "client_payload: {"paused": false}"}' https://api.github.com/repos/${OWNER}/${REPO}/dispatches
