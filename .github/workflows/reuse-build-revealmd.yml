@@ -36,7 +36,7 @@ jobs:
         with:
           repository: 'dr3dr3/devops-via-preso'
           ref: ${{ inputs.target-ref }}
-          token: ${{ secrets.GHA_PAT || github.token }}
+          token: ${{ secrets.envPAT || github.token }}
 
       - name: Setup Node.JS
         uses: actions/setup-node@v3
