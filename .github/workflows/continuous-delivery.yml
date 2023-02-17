@@ -1,15 +1,27 @@
-# Continuous Integration
+# Continuous Delivery
 name: continuous-delivery
 run-name: CD pipeline to deploy to Stage and Canary
 
 on: workflow_dispatch
 
 jobs:
-  tag-release:
-    name: Tag and Release
-    if: ${{ github.ref == 'refs/head/main' }}
-    permissions:
-      contents: write
-      issues: write
-    uses: ./.github/workflows/reuse-tag-release.yml
 
+  # Dispatch send to trigger deployment to Stage (separate repo)
+  dispatch-stage:
+    name: Dispatch to Stage
+    # needs: [create-release-and-tag]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest  
+    env:
+      GITHUB_TOKEN: ${{ secrets.TAG_MAIN }}
+      OWNER: ${{ github.repository_owner }}
+      REPO_NAME: ${{ github.event.repository.name }}
+    steps:
+
+      - name: Send Dispatch 
+        run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${GITHUB_TOKEN}" \
+          --request POST \
+          --data '{"event_type": "deploy-stage", "client_payload: {"paused": false}"}' \
+          https://api.github.com/repos/${OWNER}/${REPO}/dispatches

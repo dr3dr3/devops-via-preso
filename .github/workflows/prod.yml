@@ -1,20 +1,23 @@
 # Continuous Deployment Workflow
-name: prod-caller-workflow
+name: prod-deploy
 run-name: Continuous deployment triggered by ${{ github.event_name }}
 
 on:
   # Runs on pushes targeting the default branch
-  push:
-    branches: [$default-branch]
-
-#permissions:
-#  contents: read
+  repository_dispatch:
+    types: [deploy-stage]
 
 jobs:
   # Add tag for next version
-  add-tag:
+  test-echo:
     name: Add Tag
-    uses: ./.github/workflows/reuse-tag-release.yml
+    if: ${{ !github.event.client_payload.paused }}
+    timeout-minutes: 10
+    runs-on: ubuntu-latest    
+    steps:
+
+      - name: Quick echo
+        run: echo "Dispatch worked"
 
 
 # JOBS:
