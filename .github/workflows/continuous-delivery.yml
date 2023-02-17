@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest  
     env:
-      GITHUB_TOKEN: ${{ secrets.TAG_MAIN }}
+      GITHUB_TOKEN: ${{ secrets.GHA_PAT }}
       OWNER: ${{ github.repository_owner }}
       REPO_NAME: 'devops-demo-stg'
     steps:

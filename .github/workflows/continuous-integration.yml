@@ -22,8 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       package-version: ${{ steps.setoutput.outputs.NPM_TAG }}    
-    env:
-      GH_TOKEN: ${{ github.token }}
 
     steps:
 
@@ -101,7 +99,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 5
-          token: ${{ secrets.TAG_MAIN }}
+          token: ${{ secrets.GHA_PAT }}
 
       - name: Add Git Tag
         run: | 

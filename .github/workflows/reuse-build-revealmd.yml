@@ -13,6 +13,9 @@ on:
         type: string
         # values: 'ci', 'stg', 'prd' (do we need one for Canary?)
         default: 'ci'
+    secrets:
+      envPAT:
+        required: true
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -40,7 +43,7 @@ jobs:
         with:
           repository: 'dr3dr3/devops-via-preso'
           ref: ${{inputs.target-ref}}
-          token: ${{ secrets.TAG_MAIN }}
+          token: ${{ secrets.GHA_PAT }}
 
       - name: Setup Node.JS
         uses: actions/setup-node@v3
