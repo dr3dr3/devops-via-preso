@@ -36,21 +36,27 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout 🛎️
         uses: actions/checkout@v3
+
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.target-ref) }}
           path: _site
+
       - name: Upload Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
           path: _site/
+          
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
       - name: Deploy to GitHub Pages 🚀
         id: deployment
         uses: actions/deploy-pages@v1
+
       - name: Summary
         run: echo "### Deploy complete! :green_apple:" >> $GITHUB_STEP_SUMMARY        
