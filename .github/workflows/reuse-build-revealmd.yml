@@ -29,13 +29,13 @@ jobs:
     steps:
 
       - name: Checkout CI 🛎️
-        if: ${{ inputs.target-ref == 'ci' }}
+        if: ${{ inputs.deploy-stage == 'ci' }}
         uses: actions/checkout@v3
         with:
           ref: ${{inputs.target-ref}}
 
       - name: Checkout 🛎️
-        if: ${{ inputs.target-ref != 'ci' }}
+        if: ${{ inputs.deploy-stage != 'ci' }}
         uses: actions/checkout@v3
         with:
           repository: 'dr3dr3/devops-via-preso'
