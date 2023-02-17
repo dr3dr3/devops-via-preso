@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} is deploying static site to GitHub Pages
 on:
   workflow_call:
     inputs:
-      branch-name:
+      target-ref:
         required: true
         type: string
       deploy-stage:
@@ -41,7 +41,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.branch-name) }}
+          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.target-ref) }}
           path: _site
       - name: Upload Pages artifacts
         uses: actions/upload-pages-artifact@v1

@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} is building Reveal-MD slide decks
 on:
   workflow_call:
     inputs:
-      branch-name:
+      target-ref:
         required: true
         type: string
       deploy-stage:
@@ -30,10 +30,9 @@ jobs:
 
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      # Use actions/setup-node to enable caching
-      # Node version on GitHub runner is v16.19
-
-      # Update branch
+        with:
+          repository: 'dr3dr3/devops-via-preso'
+          ref: ${{inputs.target-ref}}
 
       - name: Setup Node.JS
         uses: actions/setup-node@v3
@@ -72,7 +71,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.branch-name) }}
+          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.target-ref) }}
           path: reveal-md/_site
           retention-days: 2
 

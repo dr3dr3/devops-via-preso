@@ -57,7 +57,7 @@ jobs:
     needs: [pr-ci]
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
-      branch-name: ${{ github.ref_name }}
+      target-ref: ${{ github.ref_name }}
       deploy-stage: 'ci'
 
   # (1) TODO: PR Checks for Build/Tests
