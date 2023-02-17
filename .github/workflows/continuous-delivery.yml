@@ -4,8 +4,6 @@ run-name: CD pipeline to deploy to Stage and Canary
 
 on: workflow_dispatch
 
-
-
 jobs:
 
   # Dispatch send to trigger deployment to Stage (separate repo)
