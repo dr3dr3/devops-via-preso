@@ -28,7 +28,15 @@ jobs:
     #  result: ${{ steps.testing.outputs.TEST_RESULT }}
     steps:
 
+      - name: Checkout CI 🛎️
+        if: ${{ inputs.target-ref == 'ci' }}
+        uses: actions/checkout@v3
+        with:
+          repository: 'dr3dr3/devops-via-preso'
+          ref: ${{inputs.target-ref}}
+
       - name: Checkout 🛎️
+        if: ${{ inputs.target-ref != 'ci' }}
         uses: actions/checkout@v3
         with:
           repository: 'dr3dr3/devops-via-preso'
