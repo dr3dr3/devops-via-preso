@@ -9,7 +9,6 @@ jobs:
   # Dispatch send to trigger deployment to Stage (separate repo)
   dispatch-stage:
     name: Dispatch to Stage
-    # needs: [create-release-and-tag]
     timeout-minutes: 10
     runs-on: ubuntu-latest  
     env:
@@ -18,6 +17,17 @@ jobs:
       REPO_NAME: 'devops-demo-stg'
     steps:
 
-      - name: Send Dispatch 
+      - name: Check Paused
+        id: check
+        # Get issues with labels from STG/CAN/PRD repo
         run: |
-          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GITHUB_TOKEN}" --request POST --data '{"event_type": "deploy-stage", "client_payload": {"paused": false, "target_ref": "main"}}' https://api.github.com/repos/${OWNER}/${REPO}/dispatches
+          count="$(gh issue list --search 'label:deploy-paused')" || 0
+          echo "$count"
+          echo "CHECK=$count" >> $GITHUB_OUTPUT
+
+      - name: Send Dispatch
+        if: ${{ steps.check.outputs.CHECK != 0 }}
+        run: |
+          echo "Success"
+          
+          # curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GITHUB_TOKEN}" --request POST --data '{"event_type": "deploy", "client_payload": {"paused": false, "target_ref": "main"}}' https://api.github.com/repos/${OWNER}/${REPO}/dispatches
