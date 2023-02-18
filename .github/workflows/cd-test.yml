@@ -1,0 +1,37 @@
+# Continuous Delivery
+name: continuous-delivery
+run-name: CD pipeline to deploy to Stage
+
+on: workflow_dispatch
+
+jobs:
+
+  # Dispatch send to trigger deployment to Stage (separate repo)
+  dispatch-stage:
+    name: Dispatch to Stage
+    timeout-minutes: 10
+    runs-on: ubuntu-latest  
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DISPATCH_TOKEN: ${{ secrets.GHA_PAT }}
+      OWNER: ${{ github.repository_owner }}
+      REPO_NAME: 'devops-demo-stg'
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Check Paused
+        id: check
+        # Get issues with labels from STG/CAN/PRD repo
+        run: |
+          issues="$(gh issue list --label "deploy-paused" --state open)" || 0
+          echo "$issues"
+          echo "CHECK=$issues" >> $GITHUB_OUTPUT
+
+      - name: Send Dispatch
+        if: ${{ steps.check.outputs.CHECK == 0 }}
+        run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${DISPATCH_TOKEN}" --request POST --data '{"event_type": "deploy-stage", "client_payload": {"paused": false, "target_ref": "main"}}' https://api.github.com/repos/${OWNER}/${REPO}/dispatches
+          echo "Success"
+          
