@@ -59,7 +59,7 @@ jobs:
           echo "$issues"
           echo "CHECK=$issues" >> $GITHUB_OUTPUT
 
-      - name: Dispatch for Stage
+      - name: Dispatch
         if: ${{ steps.check.outputs.CHECK == 0 && inputs.deploy-target != 'ci' }}
         run: |
           curl -H "Accept: application/vnd.github.everest-preview+json" \
