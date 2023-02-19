@@ -1,12 +1,12 @@
 ---
-title: Version for Stage
+title: Version for CI
 ---
 
 <!-- .slide: data-background="#ffffff" -->
 
-# 🦄
+# 🐞
 
-### Stage
+### CI Site
 
 ---
 

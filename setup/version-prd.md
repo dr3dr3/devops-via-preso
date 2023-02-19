@@ -1,12 +1,12 @@
 ---
-title: Version for Stage
+title: Version for Production
 ---
 
 <!-- .slide: data-background="#ffffff" -->
 
-# 🦄
+# 🦅
 
-### Stage
+### Production Site
 
 ---
 

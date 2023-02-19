@@ -1,12 +1,12 @@
 ---
-title: Version for Stage
+title: Version for Canary
 ---
 
 <!-- .slide: data-background="#ffffff" -->
 
-# 🦄
+# 🐥
 
-### Stage
+### Canary Site
 
 ---
 
