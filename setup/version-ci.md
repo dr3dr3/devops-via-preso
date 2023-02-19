@@ -10,5 +10,4 @@ title: Version for CI
 
 ---
 
-# Version
-
+## Version and Build Date
