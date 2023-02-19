@@ -43,9 +43,18 @@ jobs:
     steps:
 
       - name: Checkout 🛎️
+        if: ${{ inputs.deploy-target != 'ci' }}
         uses: actions/checkout@v3
         with: 
           repository: ${{ format('{0}-{1}', 'dr3dr3/devops-demo', inputs.deploy-target) }}
+          ref: ${{ inputs.target-ref }}
+          token: ${{ secrets.GHA_PAT }}
+
+      - name: Checkout CI
+        if: ${{ inputs.deploy-target == 'ci' }}
+        uses: actions/checkout@v3
+        with: 
+          repository: 'dr3dr3/devops-via-preso'
           ref: ${{ inputs.target-ref }}
           token: ${{ secrets.GHA_PAT }}
 
@@ -64,7 +73,7 @@ jobs:
         run: |
           curl -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.GHA_PAT }}" \
-          --request POST --data '{"event_type": "deploy", "client_payload": {"paused": true, "target_ref": "${{ inputs.target-ref }}"}}' \
+          --request POST --data '{"event_type": "deploy", "client_payload": {"paused": false, "target_ref": "${{ inputs.target-ref }}"}}' \
           https://api.github.com/repos/${{ github.repository_owner }}/${{ format('{0}-{1}', 'devops-demo', inputs.deploy-target) }}/dispatches
           echo "Success"
 
@@ -73,6 +82,6 @@ jobs:
         run: |
           curl -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.GHA_PAT }}" \
-          --request POST --data '{"event_type": "deploy", "client_payload": {"paused": true, "target_ref": "${{ inputs.target-ref }}"}}' \
+          --request POST --data '{"event_type": "deploy", "client_payload": {"paused": false, "target_ref": "${{ inputs.target-ref }}"}}' \
           https://api.github.com/repos/${{ github.repository_owner }}/devops-via-preso/dispatches
           echo "Success"
