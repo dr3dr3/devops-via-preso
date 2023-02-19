@@ -67,19 +67,6 @@ jobs:
   # https://josh-ops.com/posts/using-github-checks-api/
 
 
-  pr-labeler:
-    name: Issue Labels to PR
-    needs: [pr-ci]
-    permissions:
-      contents: read
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/labeler@v4
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        
-
   # Merge PR if ready (note: by "[merge ci]" in message of final commit on feature branch)
   pr-merge-ci: 
     name: PR Merge CI
@@ -134,7 +121,7 @@ jobs:
 
   # Scheduled dispatch to CI
   dispatch-deploy-ci:
-    name: Dispatch to Deploy to CI
+    name: Dispatch Deploy CI
     if: ${{ contains(github.event.head_commit.message, '[deploy]') }}    
     needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
@@ -146,7 +133,7 @@ jobs:
 
   # Scheduled dispatch to Stage
   dispatch-deploy-stage:
-    name: Dispatch to Deploy to Stage
+    name: Dispatch Deploy Stage
     needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
     with: 
