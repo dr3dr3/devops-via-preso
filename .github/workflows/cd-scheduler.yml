@@ -1,0 +1,47 @@
+# Continuous Delivery Scheduled Deployments
+name: continuous-delivery-scheduler
+run-name: Scheduled Deployments
+
+on:
+  schedule:
+    - cron: '55 19 * * 1,2,3,4,5'  # Daily run for Canary deployments
+    - cron: '55 19 * * 1'          # Weekly run for Production deployments
+
+  workflow_dispatch:
+    inputs:
+      target-ref:
+        description: 'Tag or Main'
+        required: true
+        default: 'main'
+        type: string
+      deploy-target:
+        description: 'Deployment target'
+        required: true
+        default: 'stg'
+        type: choice
+        options:
+        - stg
+        - can
+        - prd
+
+jobs:
+
+  # Scheduled dispatch to Canary
+  scheduled-deploy-canary:
+    name: Scheduled Deploy to Canary
+    if: github.event.schedule == '55 19 * * 1,2,3,4,5'
+    uses: ./.github/workflows/continuous-delivery.yml
+    with: 
+      target-ref: 'main'
+      deploy-target: 'can'
+    secrets: inherit      
+
+  # Scheduled dispatch to Production
+  scheduled-deploy-production:
+    name: Scheduled Deploy to Production
+    if: github.event.schedule == '55 19 * * 1'
+    uses: ./.github/workflows/continuous-delivery.yml
+    with: 
+      target-ref: 'main'
+      deploy-target: 'prd'
+    secrets: inherit    
