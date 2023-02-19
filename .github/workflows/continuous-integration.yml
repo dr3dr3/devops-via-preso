@@ -67,6 +67,19 @@ jobs:
   # https://josh-ops.com/posts/using-github-checks-api/
 
 
+  pr-labeler:
+    name: Issue Labels to PR
+    needs: [pr-ci]
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/labeler@v4
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        
+
   # Merge PR if ready (note: by "[merge ci]" in message of final commit on feature branch)
   pr-merge-ci: 
     name: PR Merge CI
@@ -119,26 +132,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-  # Deploy to GitHub Pages on the Stage Repo
-  deploy-ci:
-    name: Deploy GHP(CI)
-    needs: [create-release-and-tag]
-    if: ${{ contains(github.event.head_commit.message, '[deploy]') }}
-    uses: ./.github/workflows/reuse-deploy-github-pages.yml
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    with:
-      target-ref: 'main' # ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
+  # Scheduled dispatch to CI
+  dispatch-deploy-ci:
+    name: Dispatch to Deploy to CI
+    if: ${{ contains(github.event.head_commit.message, '[deploy]') }}    
+    needs: [pr-ci, create-release-and-tag]
+    uses: ./.github/workflows/continuous-delivery.yml
+    with: 
+      target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }} 
       deploy-target: 'ci'
-    secrets: inherit
+    secrets: inherit   
 
 
-  # Scheduled dispatch to Canary
+  # Scheduled dispatch to Stage
   dispatch-deploy-stage:
     name: Dispatch to Deploy to Stage
-    needs: [create-release-and-tag]
+    needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
     with: 
       target-ref: 'main'
