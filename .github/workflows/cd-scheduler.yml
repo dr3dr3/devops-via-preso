@@ -4,7 +4,7 @@ run-name: Scheduled Deployments
 
 on:
   schedule:
-    - cron: '55 19 * * 1,2,3,4,5'  # Daily run for Canary deployments
+    - cron: '55 19 * * 1,2,3,4,5'  # Daily run for Canary deployments 5:55am Brisbane
     - cron: '55 19 * * 1'          # Weekly run for Production deployments
 
   workflow_dispatch:
