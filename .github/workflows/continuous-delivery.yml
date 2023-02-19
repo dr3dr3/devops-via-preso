@@ -1,8 +1,37 @@
-# Continuous Delivery
+# Continuous Delivery pipeline to deploy to target environment (GitHub repos for GitHub Pages)
 name: continuous-delivery
-run-name: CD pipeline to deploy to Stage and Canary
+run-name: CD Deployment Dispatcher
 
-on: workflow_dispatch
+on:
+
+  workflow_call:
+    inputs:
+      target-ref:
+        required: true
+        type: string
+      deploy-target:
+        required: true
+        type: string
+        default: 'ci'
+
+  workflow_dispatch:
+    inputs:
+      target-ref:
+        description: 'Tag or Main'
+        required: true
+        default: 'main'
+        type: string
+      deploy-target:
+        description: 'Deployment target'
+        required: true
+        default: 'ci'
+        type: choice
+        options:
+        - ci
+        - stg
+        - can
+        - prd
+
 
 jobs:
 
@@ -10,24 +39,32 @@ jobs:
   dispatch-stage:
     name: Dispatch to Stage
     timeout-minutes: 10
-    runs-on: ubuntu-latest  
-    env:
-      GITHUB_TOKEN: ${{ secrets.GHA_PAT }}
-      OWNER: ${{ github.repository_owner }}
-      REPO_NAME: 'devops-demo-stg'
+    runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with: 
+          repository: ${{ format('{0}-{1}', 'dr3dr3/devops-demo', inputs.deploy-target) }}
+          ref: ${{ inputs.target-ref }}
+          token: ${{ secrets.GHA_PAT }}
 
       - name: Check Paused
         id: check
         # Get issues with labels from STG/CAN/PRD repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
-          count="$(gh issue list --search 'label:deploy-paused')" || 0
-          echo "$count"
-          echo "CHECK=$count" >> $GITHUB_OUTPUT
+          issues="$(gh issue list --label "deploy-paused" --state open)" || 0
+          echo "$issues"
+          echo "CHECK=$issues" >> $GITHUB_OUTPUT
 
-      - name: Send Dispatch
-        if: ${{ steps.check.outputs.CHECK != 0 }}
+      - name: Dispatch
+        if: ${{ steps.check.outputs.CHECK == 0 && inputs.deploy-target != 'ci' }}
         run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.GHA_PAT }}" \
+          --request POST --data '{"event_type": "deploy-stage", "client_payload": {"paused": true, "target_ref": "${{ inputs.target-ref }}"}}' \
+          https://api.github.com/repos/${{ github.repository_owner }}/${{ format('{0}-{1}', 'devops-demo', inputs.deploy-target) }}/dispatches
           echo "Success"
           
-          # curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GITHUB_TOKEN}" --request POST --data '{"event_type": "deploy", "client_payload": {"paused": false, "target_ref": "main"}}' https://api.github.com/repos/${OWNER}/${REPO}/dispatches
