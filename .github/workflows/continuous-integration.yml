@@ -46,7 +46,10 @@ jobs:
           echo "NPM_TAG=${{steps.package-version.outputs.current-version}}" >> $GITHUB_OUTPUT
           echo "FB=${{ github.ref_name }}" >> $GITHUB_OUTPUT
 
-
+      - name: Add labels to PR
+        uses: actions/labeler@v4
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
@@ -55,7 +58,7 @@ jobs:
 
   # Build static site using Reveal-MD
   build-ci:
-    name: Build-CI
+    name: Build CI
     needs: [pr-ci]
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
@@ -90,7 +93,7 @@ jobs:
 
   # Create release using GitHub CLI (auto adds tag to commit and generates release notes)
   create-release-and-tag:
-    name: Create Release and Tag Commit
+    name: Release and Tag Commit
     needs: [pr-ci, pr-merge-ci]
     timeout-minutes: 10
     runs-on: ubuntu-latest  
