@@ -46,10 +46,6 @@ jobs:
           echo "NPM_TAG=${{steps.package-version.outputs.current-version}}" >> $GITHUB_OUTPUT
           echo "FB=${{ github.ref_name }}" >> $GITHUB_OUTPUT
 
-      - name: Add labels to PR
-        uses: actions/labeler@v4
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
   # Add data for metrics: "lead time to change" (first push to remote)
 
