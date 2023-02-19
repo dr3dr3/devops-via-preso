@@ -8,7 +8,7 @@ on:
       target-ref:
         required: true
         type: string
-      deploy-stage:
+      deploy-target:
         required: true
         type: string
         # values: 'ci', 'stg', 'prd' (do we need one for Canary?)
@@ -57,7 +57,7 @@ jobs:
         run: rsync -avh setup/template.html reveal-md
         
       - name: Copy version slide to Reveal-MD
-        run: rsync -avh ${{ format('{0}{1}{2}', 'setup/version-', inputs.deploy-stage, '.md') }} reveal-md/markdown/version.md
+        run: rsync -avh ${{ format('{0}{1}{2}', 'setup/version-', inputs.deploy-target, '.md') }} reveal-md/markdown/version.md
 
       - name: Add version and build date
         run: |
@@ -89,7 +89,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ format('{0}-{1}_{2}', inputs.deploy-stage, 'build', inputs.target-ref) }}
+          name: ${{ format('{0}-{1}_{2}', inputs.deploy-target, 'build', inputs.target-ref) }}
           path: reveal-md/_site
           retention-days: 2
 

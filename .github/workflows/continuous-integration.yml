@@ -60,7 +60,7 @@ jobs:
     uses: ./.github/workflows/reuse-build-revealmd.yml
     with: 
       target-ref: ${{ github.ref_name }}
-      deploy-stage: 'ci'
+      deploy-target: 'ci'
 
   # (1) TODO: PR Checks for Build/Tests
   # https://sagarsonwane230797.medium.com/automate-build-checks-and-slack-notification-with-github-actions-3b7eb702dae6
