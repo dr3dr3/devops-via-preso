@@ -13,6 +13,9 @@ on:
         type: string
         # values: 'stg', 'prd'
         default: 'stg'
+    secrets:
+      envPAT:
+        required: false        
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -39,6 +42,10 @@ jobs:
 
       - name: Checkout 🛎️
         uses: actions/checkout@v3
+        with:
+          repository: 'dr3dr3/devops-via-preso'
+          ref: ${{ inputs.target-ref }}
+          token: ${{ secrets.envPAT || github.token }}        
 
       - name: Download build artifacts
         uses: actions/download-artifact@v3
