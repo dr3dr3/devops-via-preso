@@ -10,5 +10,4 @@ title: Version for Canary
 
 ---
 
-# Version
-
+# Version and Build
