@@ -62,9 +62,9 @@ jobs:
       - name: Add version and build date
         run: |
           echo "Version: ${{ inputs.target-ref }}" >> reveal-md/markdown/version.md
-          echo ""
+          echo " "
           echo "Build Date-Stamp: $(date +%F-%T)" >> reveal-md/markdown/version.md
-          echo ""
+          echo " "
 
       #- name: Fail test
       #  run: rsync slidify.spec.js reveal-md/test

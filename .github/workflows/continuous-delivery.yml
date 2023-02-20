@@ -56,13 +56,14 @@ jobs:
         with: 
           repository: 'dr3dr3/devops-via-preso'
           ref: 'main'
-          token: ${{ secrets.GHA_PAT }}
+          #token: ${{ secrets.GHA_PAT }}
 
       - name: Check Paused
+        if: ${{ inputs.deploy-target != 'ci' }}
         id: check
         # Get issues with labels from STG/CAN/PRD repo
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+          GITHUB_TOKEN: ${{ secrets.GHA_PAT }}   
         run: |
           issues="$(gh issue list --label "deploy-paused" --state open)" || 0
           echo "$issues"
