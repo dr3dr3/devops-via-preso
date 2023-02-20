@@ -57,10 +57,8 @@ jobs:
         # Get latest release tag if using main branch
         id: latest-tag
         if: ${{ inputs.target-ref == 'main' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
-          latest="$(gh release view)" || 0
+          latest="$(git describe --tags --abbrev=0)" || 0
           echo "Latest tag: $latest"
           echo "TAG=$latest" >> $GITHUB_OUTPUT
 
