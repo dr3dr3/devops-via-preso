@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v3
         with: 
           repository: ${{ format('{0}-{1}', 'dr3dr3/devops-demo', inputs.deploy-target) }}
-          ref: ${{ inputs.target-ref }}
+          ref: 'main'
           token: ${{ secrets.GHA_PAT }}
 
       - name: Checkout CI
@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@v3
         with: 
           repository: 'dr3dr3/devops-via-preso'
-          ref: ${{ inputs.target-ref }}
+          ref: 'main'
           token: ${{ secrets.GHA_PAT }}
 
       - name: Check Paused

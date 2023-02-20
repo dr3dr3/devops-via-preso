@@ -125,7 +125,7 @@ jobs:
     needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
     with: 
-      target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }} 
+      target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'ci'
     secrets: inherit   
 
@@ -136,7 +136,7 @@ jobs:
     needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
     with: 
-      target-ref: 'main'
+      target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'stg'
     secrets: inherit   
 
