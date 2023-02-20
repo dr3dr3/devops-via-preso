@@ -61,7 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
           latest="$(gh release view)" || 0
-          echo "LAtest tag: $latest"
+          echo "Latest tag: $latest"
           echo "TAG=$latest" >> $GITHUB_OUTPUT
 
       - name: Copy slide template to Reveal-MD
@@ -73,7 +73,7 @@ jobs:
       - name: Add version and build date
         run: |
           echo "Version: ${{ steps.latest-tag.outputs.TAG || inputs.target-ref }}" >> reveal-md/markdown/version.md
-          echo "Build Date-Stamp: $(date +%F-%T)"
+          echo "Build Date-Stamp: $(date +%F-%T)" >> reveal-md/markdown/version.md
 
       #- name: Fail test
       #  run: rsync slidify.spec.js reveal-md/test
