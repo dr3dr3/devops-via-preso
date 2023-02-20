@@ -24,8 +24,6 @@ jobs:
     outputs:
       package-version: ${{ steps.setoutput.outputs.NPM_TAG }}
       feature-branch: ${{ steps.setoutput.outputs.FB }}
-    env:
-      GH_TOKEN: ${{ github.token }}
 
     steps:
 
@@ -34,6 +32,8 @@ jobs:
 
       - name: Create/Reopen Pull Request
         run: gh pr edit ${{ github.ref_name }} -b "Reopened by Github action" -t ${{ github.ref_name }} && gh pr reopen ${{ github.ref_name }} || gh pr create -t ${{ github.ref_name }} -b "Created by Github action"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Get NPM Package Version
         id: package-version
@@ -128,7 +128,7 @@ jobs:
     with: 
       target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'ci'
-    secrets: inherit   
+    #secrets: inherit   
 
 
   # Scheduled dispatch to Stage
@@ -139,7 +139,7 @@ jobs:
     with: 
       target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'stg'
-    secrets: inherit   
+    #secrets: inherit   
 
 
 
