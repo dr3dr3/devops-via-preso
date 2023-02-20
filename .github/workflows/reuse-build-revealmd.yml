@@ -58,9 +58,9 @@ jobs:
         id: latest-tag
         if: ${{ inputs.target-ref == 'main' }}
         run: |
-          latest="$(git describe --tags --abbrev=0)" || 0
-          echo "Latest tag: $latest"
-          echo "TAG=$latest" >> $GITHUB_OUTPUT
+          result="$(git describe --tags --abbrev=0)" || echo "Error"
+          echo "Latest tag: $result"
+          echo "TAG=$result" >> $GITHUB_OUTPUT
 
       - name: Copy slide template to Reveal-MD
         run: rsync -avh setup/template.html reveal-md
