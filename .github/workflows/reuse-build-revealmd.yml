@@ -53,15 +53,6 @@ jobs:
       - name: Copy markdown files to Reveal-MD
         run: rsync -avh markdown reveal-md
 
-      - name: Get version
-        # Get latest release tag if using main branch
-        id: latest-tag
-        if: ${{ inputs.target-ref == 'main' }}
-        run: |
-          result="$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)"
-          echo "Latest tag: $result"
-          echo "TAG=$result" >> $GITHUB_OUTPUT
-
       - name: Copy slide template to Reveal-MD
         run: rsync -avh setup/template.html reveal-md
         
@@ -70,8 +61,8 @@ jobs:
 
       - name: Add version and build date
         run: |
-          echo "Version: ${{ steps.latest-tag.outputs.TAG || inputs.target-ref }}" >> reveal-md/markdown/version.md
-          echo "Build Date-Stamp: $(date +%F-%T)" >> reveal-md/markdown/version.md
+          echo "Version: ${{ inputs.target-ref }} \n" >> reveal-md/markdown/version.md
+          echo "Build Date-Stamp: $(date +%F-%T) \n" >> reveal-md/markdown/version.md
 
       #- name: Fail test
       #  run: rsync slidify.spec.js reveal-md/test
