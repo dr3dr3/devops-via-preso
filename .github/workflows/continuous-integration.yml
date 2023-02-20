@@ -122,8 +122,8 @@ jobs:
   # Scheduled dispatch to CI
   dispatch-deploy-ci:
     name: Deploy CI
-    if: ${{ contains(github.event.head_commit.message, '[ci]') }}    
-    needs: [pr-ci, build-ci]
+    if: ${{ contains(github.event.head_commit.message, '[merge]') }}    
+    needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
     with: 
       target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
