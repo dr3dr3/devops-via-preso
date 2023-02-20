@@ -48,7 +48,7 @@ jobs:
         with: 
           repository: ${{ format('{0}-{1}', 'dr3dr3/devops-demo', inputs.deploy-target) }}
           ref: 'main'
-          token: ${{ secrets.GHA_PAT }}
+          #token: ${{ secrets.GHA_PAT }}
 
       - name: Checkout CI
         if: ${{ inputs.deploy-target == 'ci' }}

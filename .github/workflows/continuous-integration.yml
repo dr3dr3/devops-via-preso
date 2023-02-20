@@ -139,7 +139,7 @@ jobs:
     with: 
       target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'stg'
-    #secrets: inherit   
+    secrets: inherit   
 
 
 
