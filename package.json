@@ -26,6 +26,6 @@
         "start": "cd reveal-md && reveal-md . -w",
         "lint": "npm run lint -workspace=reveal-md",
         "test": "npm run test -workspace=reveal-md",
-        "build": "cd reveal-md && reveal-md --static _site --template template.html --glob 'markdown/*.md"
+        "build": "cd reveal-md && reveal-md --static _site --template template.html --glob 'markdown/*.md'"
     }
 }
