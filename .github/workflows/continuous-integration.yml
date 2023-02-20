@@ -128,7 +128,7 @@ jobs:
     with: 
       target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'ci'
-    #secrets: inherit   
+    secrets: inherit   
 
 
   # Scheduled dispatch to Stage
