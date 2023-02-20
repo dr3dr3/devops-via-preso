@@ -15,6 +15,7 @@ jobs:
   # Create PR for this feature (if does not exist)
   pr-ci: 
     name: PR Open-Reopen
+    if: ${{ contains(github.event.head_commit.message, '[ci]') || contains(github.event.head_commit.message, '[merge]') }}
     timeout-minutes: 10
     permissions:
       pull-requests: write
@@ -66,11 +67,11 @@ jobs:
   # https://josh-ops.com/posts/using-github-checks-api/
 
 
-  # Merge PR if ready (note: by "[merge ci]" in message of final commit on feature branch)
+  # Merge PR if ready (note: by "[merge]" in message of final commit on feature branch)
   pr-merge-ci: 
     name: PR Merge CI
     needs: [pr-ci, build-ci]
-    if: ${{ contains(github.event.head_commit.message, '[merge ci]') }}
+    if: ${{ contains(github.event.head_commit.message, '[merge]') }}
     timeout-minutes: 10
     runs-on: ubuntu-latest    
     steps:
@@ -121,7 +122,7 @@ jobs:
   # Scheduled dispatch to CI
   dispatch-deploy-ci:
     name: Deploy CI
-    if: ${{ contains(github.event.head_commit.message, '[deploy]') }}    
+    if: ${{ contains(github.event.head_commit.message, '[merge]') }}    
     needs: [pr-ci, create-release-and-tag]
     uses: ./.github/workflows/continuous-delivery.yml
     with: 
@@ -139,6 +140,7 @@ jobs:
       target-ref: ${{ format('{0}{1}', 'v', needs.pr-ci.outputs.package-version) }}
       deploy-target: 'stg'
     secrets: inherit   
+
 
 
 
