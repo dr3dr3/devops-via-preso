@@ -1,6 +1,6 @@
 {
     "name": "devops-via-preso",
-    "version": "0.3.21",
+    "version": "0.3.22",
     "description": "Demonstrating DevOps using Reveal.JS Presentations",
     "homepage": "https://github.com/dr3dr3/devops-via-preso",
     "license": "MIT",
@@ -26,6 +26,6 @@
         "start": "cd reveal-md && reveal-md . -w",
         "lint": "npm run lint -workspace=reveal-md",
         "test": "npm run test -workspace=reveal-md",
-        "build": "cd reveal-md && reveal-md --static _site --template template.html"
+        "build": "cd reveal-md && reveal-md --static _site --template template.html --glob 'markdown/*.md"
     }
 }
